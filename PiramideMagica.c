@@ -47,6 +47,9 @@ void BasePiramideTras();
 // Piramide base4. (somente para testes)
 void Piramide4Base();
 
+// Mostra coordenadas (somente para testes)
+void MostraCoordenadas();
+
 // Rotacoes
 void RotacaoTopo_A();      // Para a Piramide do topo
 void RotacaoTopo_B();      // Para a Base da Piramide do topo
@@ -544,6 +547,18 @@ void BasePiramideTras(){
     glEnd();
 }
 
+void MostraCoordenadas(){
+    glBegin(GL_LINES);
+    glColor3f(0.0, 0.0, 0.0);   // Preto
+    glVertex3f(-4, 0, 0);
+    glVertex3f(4, 0, 0);
+    glVertex3f(0, -4, 0);
+    glVertex3f(0, 4, 0);
+    glVertex3f(0, 0, -4);
+    glVertex3f(0, 0, 4);
+    glEnd();
+}
+
 void RotacaoTopo_A(){
     // Ajeita para o lugar anterior
     glTranslatef(0, 0, 2/3);
@@ -611,25 +626,40 @@ void RotacaoDireita_B(){
 }
 
 void RotacaoTras_A(){
-    // Ajeita para o lugar anterior
-    glTranslatef(0, -(2/3), 2/3);
+    // Translacao de volta
+    glTranslatef(0, -2, -2);
     
-    //            Rotação
-    glRotatef(-fator_rotac_tras_A, 0, -0.00000001, (-999999999));
+    //  Rotacao de volta
+    glRotatef(-116.5, 1, 0, 0);
     
-    // Ajeita para rotacionar ao redor do Y
-    glTranslatef(0, 2/3, -2/3);
+    //  Rotacao ao redor do eixo Y
+    glRotatef(-fator_rotac_tras_A, 0, 1, 0);
+    
+    
+    //  Rotacao para a parte de tras ficar em pe
+    glRotatef(116.5, 1, 0, 0);
+    
+    // Translacao para o centro
+    glTranslatef(0, 2, 2);
 }
 
+
 void RotacaoTras_B(){
-    // Ajeita para o lugar anterior
-    glTranslatef(0, 0, 2/3);
+    // Translacao de volta
+    glTranslatef(0, -2, -2);
     
-    //            Rotação
+    //  Rotacao de volta
+    glRotatef(-116.5, 1, 0, 0);
+    
+    //  Rotacao ao redor do eixo Y
     glRotatef(-fator_rotac_tras_B, 0, 1, 0);
     
-    // Ajeita para rotacionar ao redor do Y
-    glTranslatef(0, 0, -2/3);
+    
+    //  Rotacao para a parte de tras ficar em pe
+    glRotatef(116.5, 1, 0, 0);
+    
+    // Translacao para o centro
+    glTranslatef(0, 2, 2);
 }
 
 void Inicializa(){
@@ -667,20 +697,27 @@ void Desenha(){
     glLoadIdentity();
     
     
-    
     // Rotaciona
-    RotacaoTras_A();
+    RotacaoTopo_A();
+    RotacaoTras_B();
     
     // Desenha
     BasePiramideTras();
     glLoadIdentity();
     
+    
     // Rotaciona
-    //    RotacaoTras_A();
+    RotacaoTopo_A();
+    RotacaoTras_A();
+    
     
     // Desenha
-    //    MiniPiramideTras();
-    //    glLoadIdentity();
+    MiniPiramideTras();
+    glLoadIdentity();
+    
+    // Mostra Coordenadas
+    MostraCoordenadas();
+    glLoadIdentity();
     
     
     
