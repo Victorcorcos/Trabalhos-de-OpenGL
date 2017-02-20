@@ -1,7 +1,10 @@
 /*
+ *
  * Desenvolvido inteiramente por
  * Victor Cordeiro Costa
  * contato: victorcorcos@gmail.com
+ * https://www.linkedin.com/in/victor-costa-0bba7197/
+ *
  */
 
 
@@ -36,19 +39,35 @@ void Keyboard (unsigned char key, int x, int y);
  }
  */
 
-// Vertices do Tetraedro maior
-GLfloat vertA[3] = {  0.0, 0.0, 1.632993161855452 };
-GLfloat vertI[3] = {  0.0, 1.154700538379251,  0.0   };
-GLfloat vertG[3] = { -1.0, -0.577350269189626, 0.0  };
-GLfloat vertE[3] = {  1.0, -0.577350269189626, 0.0  };
 
-// Vertices dos pontos de seccao do Tetraedro
-GLfloat vertB[3] = { -1, 0, 1   };
-GLfloat vertC[3] = {  1, 0, 1   };
-GLfloat vertD[3] = {  0, 0, -1  };
-GLfloat vertF[3] = {  0, -2, 2  };
-GLfloat vertH[3] = {  1, -2, 0  };
-GLfloat vertJ[3] = { -1, -2, 0  };
+// Vertices vistos de cima:
+//
+//            B
+//            E
+//          H E J
+//          F A G
+//        C   I   D
+//
+
+// Vertices do Tetraedro maior
+GLfloat vertA[3] = {  0.0, 0.0,                1.632993161855452 };  // Centro (Frente)
+GLfloat vertB[3] = {  0.0, 1.154700538379251,  0.0  };               // Cima
+GLfloat vertC[3] = { -1.0, -0.577350269189626, 0.0  };               // Esquerda
+GLfloat vertD[3] = {  1.0, -0.577350269189626, 0.0  };               // Cima
+
+// Vertices dos Tetraedros internos (pontos de seccao do Tetraedro maior)
+GLfloat vertE[3] = {  0,     0.577, 0.816  };
+GLfloat vertF[3] = {  -0.5, -0.289, 0.816  };
+GLfloat vertG[3] = {  0.5,  -0.289, 0.816  };
+GLfloat vertH[3] = {  -0.5,  0.288, 0      };
+GLfloat vertI[3] = {  0,    -0.578, 0      };
+GLfloat vertJ[3] = {  0.5,   0.288, 0      };
+
+// Cores das faces
+GLfloat corCimaEsquerda[3] = { 1.0f, 0.0f, 0.0f };   // Vermelho
+GLfloat corCimaDireita[3]  = { 0.0f, 0.0f, 1.0f };   // Azul
+GLfloat corBaixo[3]        = { 0.0f, 1.0f, 0.0f };   // Verde
+GLfloat corTras[3]         = { 0.0f, 0.0f, 0.0f };   // Preto
 
 // Atualizar tela
 void ReshapeTeste();
@@ -64,9 +83,6 @@ void BasePiramideDireita();
 void MiniPiramideTras();
 void BasePiramideTras();
 
-// Piramide base4. (somente para testes)
-void Piramide4Base();
-
 // Mostra coordenadas (somente para testes)
 void MostraCoordenadas();
 
@@ -74,10 +90,10 @@ void MostraCoordenadas();
 void RotacaoTotal();       // OK. Rotaciona toda a piramide
 void RotacaoFrente_A();    // OK. Para a Piramide da frente
 void RotacaoFrente_B();    // OK. Para a Base da Piramide da frente
-void RotacaoEsquerda_A();  // OK? Para a Piramide da lateral esquerda
-void RotacaoEsquerda_B();  // OK? Para a Base da Piramide da lateral esquerda
-void RotacaoDireita_A();   // OK? Para a Piramide da lateral direita
-void RotacaoDireita_B();   // OK? Para a Base da Piramide da lateral direita
+void RotacaoEsquerda_A();  // OK. Para a Piramide da lateral esquerda
+void RotacaoEsquerda_B();  // OK. Para a Base da Piramide da lateral esquerda
+void RotacaoDireita_A();   // OK. Para a Piramide da lateral direita
+void RotacaoDireita_B();   // OK. Para a Base da Piramide da lateral direita
 void RotacaoCima_A();      // OK. Para a Piramide de cima
 void RotacaoCima_B();      // OK. Para a Base da Piramide de cima
 
@@ -204,10 +220,6 @@ void Keyboard (unsigned char key, int x, int y){
     }
 }
 
-void Menu(){
-    
-}
-
 void ReshapeTeste(){
     if (treme==-1)
         treme=1;
@@ -217,105 +229,57 @@ void ReshapeTeste(){
     glutPositionWindow(300, 150);
 }
 
-void Piramide4Base(){
-    
-    glBegin(GL_TRIANGLES);
-    // Frente
-    glColor3f(1.0f, 0.0f, 0.0f);     // Vermelho
-    glVertex3f( 0.0f, 1.0f, 0.0f);
-    glVertex3f(-1.0f, -1.0f, 1.0f);
-    glVertex3f(1.0f, -1.0f, 1.0f);
-    
-    // Direita
-    glColor3f(0.0f, 1.0f, 0.0f);     // Verde
-    glVertex3f(0.0f, 1.0f, 0.0f);
-    glVertex3f(1.0f, -1.0f, 1.0f);
-    glVertex3f(1.0f, -1.0f, -1.0f);
-    
-    // Atras
-    glColor3f(0.0f, 0.0f, 1.0f);     // Azul
-    glVertex3f(0.0f, 1.0f, 0.0f);
-    glVertex3f(1.0f, -1.0f, -1.0f);
-    glVertex3f(-1.0f, -1.0f, -1.0f);
-    
-    // Esquerda
-    glColor3f(1.0f, 0.0f, 1.0f);     // Rosa
-    glVertex3f( 0.0f, 1.0f, 0.0f);
-    glVertex3f(-1.0f,-1.0f,-1.0f);
-    glVertex3f(-1.0f,-1.0f, 1.0f);
-    glEnd();
-    
-    // Base
-    glBegin(GL_QUADS);
-    glColor3f(0.0f, 0.0f, 0.0f);     // Preto (Base)
-    glVertex3f(-1.0f,-1.0f,-1.0f);
-    glVertex3f(-1.0f,-1.0f, 1.0f);
-    glVertex3f( 1.0f,-1.0f, 1.0f);
-    glVertex3f( 1.0f,-1.0f, -1.0f);
-    glEnd();
-    
-    glutSwapBuffers();
-    
-}
-
 void Tetraedro(){
     
     glBegin(GL_TRIANGLES);
     
-    glColor3f(1.0, 0.0, 0.0);  // Vermelho  (frente)
+    glColor3fv(corCimaEsquerda);
     glVertex3fv(vertA);
-    glVertex3fv(vertI);
-    glVertex3fv(vertG);
+    glVertex3fv(vertB);
+    glVertex3fv(vertC);
     
-    glColor3f(0.0, 1.0, 0.0);  // Verde     (direita)
+    glColor3fv(corBaixo);
     glVertex3fv(vertA);
-    glVertex3fv(vertG);
-    glVertex3fv(vertE);
+    glVertex3fv(vertC);
+    glVertex3fv(vertD);
     
-    glColor3f(0.0, 0.0, 1.0);  // Azul      (esquerda)
+    glColor3fv(corCimaDireita);
     glVertex3fv(vertA);
-    glVertex3fv(vertE);
-    glVertex3fv(vertI);
+    glVertex3fv(vertD);
+    glVertex3fv(vertB);
     
-    glColor3f(0.0, 0.0, 0.0);  // Preto     (base)
-    glVertex3fv(vertG);
-    glVertex3fv(vertE);
-    glVertex3fv(vertI);
+    glColor3fv(corTras);
+    glVertex3fv(vertC);
+    glVertex3fv(vertD);
+    glVertex3fv(vertB);
     
     glEnd();
     
 }
-
-/*
-GLfloat vertA[3] = {  0.0, 0.0, 1.632993161855452 };
-GLfloat vertI[3] = {  0.0, 1.154700538379251,  0.0   };
-GLfloat vertG[3] = { -1.0, -0.577350269189626, 0.0  };
-GLfloat vertE[3] = {  1.0, -0.577350269189626, 0.0  };
-*/
 
 void MiniPiramideTopo(){
     
     glBegin(GL_TRIANGLES);
     
-    glColor3f(1.0, 0.0, 0.0);  // Vermelho (frente)
+    glColor3fv(corCimaEsquerda);
     glVertex3fv(vertA);
-    glVertex3fv(vertB);
-    glVertex3fv(vertC);
+    glVertex3fv(vertE);
+    glVertex3fv(vertF);
     
-    glColor3f(0.0, 1.0, 0.0);  // Verde    (direita)
+    glColor3fv(corBaixo);
     glVertex3fv(vertA);
-    glVertex3fv(vertC);
-    glVertex3fv(vertD);
+    glVertex3fv(vertF);
+    glVertex3fv(vertG);
     
-    glColor3f(0.0, 0.0, 1.0);  // Azul     (esquerda)
+    glColor3fv(corCimaDireita);
     glVertex3fv(vertA);
-    glVertex3fv(vertD);
-    glVertex3fv(vertB);
+    glVertex3fv(vertG);
+    glVertex3fv(vertE);
     
-    glColor3f(0.0, 0.0, 0.0);  // Preto    (base)
-    glVertex3fv(vertD);
-    glVertex3fv(vertB);
-    glVertex3fv(vertC);
+    glColor3fv(corTras); // (base)
+    glVertex3fv(vertG);
+    glVertex3fv(vertE);
+    glVertex3fv(vertF);
     
     glEnd();
 }
@@ -324,45 +288,45 @@ void BasePiramideTopo(){
     
     glBegin(GL_TRIANGLES);
     
-    glColor3f(0.0, 0.0, 0.0);  // Preto (topo)
-    glVertex3fv(vertD);
-    glVertex3fv(vertB);
-    glVertex3fv(vertC);
-    
-    glColor3f(0.0, 0.0, 0.0);  // Preto (base)
-    glVertex3fv(vertI);
+    glColor3fv(corTras);  // Preto (topo)
+    glVertex3fv(vertG);
     glVertex3fv(vertE);
-    glVertex3fv(vertG);
-    glEnd();
-    
-    glBegin(GL_POLYGON);
-    glColor3f(1.0, 0.0, 0.0);  // Vermelho (frente)
-    glVertex3fv(vertB);
-    glVertex3fv(vertC);
-    glVertex3fv(vertG);
     glVertex3fv(vertF);
-    glVertex3fv(vertE);
+    
+    glColor3fv(corTras);  // Preto (base)
     glVertex3fv(vertB);
+    glVertex3fv(vertD);
+    glVertex3fv(vertC);
     glEnd();
     
     glBegin(GL_POLYGON);
-    glColor3f(0.0, 1.0, 0.0);  // Verde (direita)
+    glColor3fv(corCimaEsquerda);
+    glVertex3fv(vertE);
+    glVertex3fv(vertF);
     glVertex3fv(vertC);
-    glVertex3fv(vertD);
-    glVertex3fv(vertI);
     glVertex3fv(vertH);
-    glVertex3fv(vertG);
-    glVertex3fv(vertC);
+    glVertex3fv(vertB);
+    glVertex3fv(vertE);
     glEnd();
     
     glBegin(GL_POLYGON);
-    glColor3f(0.0, 0.0, 1.0);  // Azul (esquerda)
+    glColor3fv(corBaixo);
+    glVertex3fv(vertF);
+    glVertex3fv(vertG);
     glVertex3fv(vertD);
-    glVertex3fv(vertB);
-    glVertex3fv(vertE);
-    glVertex3fv(vertJ);
     glVertex3fv(vertI);
+    glVertex3fv(vertC);
+    glVertex3fv(vertF);
+    glEnd();
+    
+    glBegin(GL_POLYGON);
+    glColor3fv(corCimaDireita);
+    glVertex3fv(vertG);
+    glVertex3fv(vertE);
+    glVertex3fv(vertB);
+    glVertex3fv(vertJ);
     glVertex3fv(vertD);
+    glVertex3fv(vertG);
     glEnd();
 }
 
@@ -370,25 +334,25 @@ void MiniPiramideEsquerda(){
     
     glBegin(GL_TRIANGLES);
     
-    glColor3f(1.0, 0.0, 0.0);  // Vermelho (frente)
-    glVertex3fv(vertB);
-    glVertex3fv(vertE);
+    glColor3fv(corCimaEsquerda);
     glVertex3fv(vertF);
+    glVertex3fv(vertH);
+    glVertex3fv(vertC);
     
-    glColor3f(0.0, 0.0, 0.0);  // Preto    (direita)
-    glVertex3fv(vertB);
+    glColor3fv(corTras);
     glVertex3fv(vertF);
-    glVertex3fv(vertJ);
+    glVertex3fv(vertI);
+    glVertex3fv(vertH);
     
-    glColor3f(0.0, 0.0, 1.0);  // Azul     (esquerda)
-    glVertex3fv(vertB);
-    glVertex3fv(vertJ);
-    glVertex3fv(vertE);
-    
-    glColor3f(0.0, 0.0, 0.0);  // Preto    (base)
-    glVertex3fv(vertE);
+    glColor3fv(corBaixo);
     glVertex3fv(vertF);
-    glVertex3fv(vertJ);
+    glVertex3fv(vertC);
+    glVertex3fv(vertI);
+    
+    glColor3fv(corTras);  // Preto    (base)
+    glVertex3fv(vertH);
+    glVertex3fv(vertC);
+    glVertex3fv(vertI);
     
     glEnd();
 }
@@ -397,45 +361,45 @@ void BasePiramideEsquerda(){
     
     glBegin(GL_TRIANGLES);
     
-    glColor3f(0.0, 0.0, 0.0);  // Preto (topo)
-    glVertex3fv(vertB);
-    glVertex3fv(vertJ);
+    glColor3fv(corTras);  // Preto (topo)
     glVertex3fv(vertF);
-    
-    glColor3f(0.0, 1.0, 0.0);  // Verde (base)
-    glVertex3fv(vertA);
-    glVertex3fv(vertI);
-    glVertex3fv(vertG);
-    glEnd();
-    
-    glBegin(GL_POLYGON);
-    glColor3f(1.0, 0.0, 0.0);  // Vermelho (frente)
-    glVertex3fv(vertB);
-    glVertex3fv(vertF);
-    glVertex3fv(vertG);
-    glVertex3fv(vertC);
-    glVertex3fv(vertA);
-    glVertex3fv(vertB);
-    glEnd();
-    
-    glBegin(GL_POLYGON);
-    glColor3f(0.0, 0.0, 1.0);  // Azul (tras)
-    glVertex3fv(vertB);
-    glVertex3fv(vertA);
-    glVertex3fv(vertD);
-    glVertex3fv(vertI);
-    glVertex3fv(vertJ);
-    glVertex3fv(vertB);
-    glEnd();
-    
-    glBegin(GL_POLYGON);
-    glColor3f(0.0, 0.0, 0.0);  // Preto (baixo)
-    glVertex3fv(vertJ);
     glVertex3fv(vertI);
     glVertex3fv(vertH);
-    glVertex3fv(vertG);
+    
+    glColor3fv(corCimaDireita);  // Verde (base)
+    glVertex3fv(vertA);
+    glVertex3fv(vertD);
+    glVertex3fv(vertB);
+    glEnd();
+    
+    glBegin(GL_POLYGON);
+    glColor3fv(corCimaEsquerda);
     glVertex3fv(vertF);
+    glVertex3fv(vertA);
+    glVertex3fv(vertE);
+    glVertex3fv(vertB);
+    glVertex3fv(vertH);
+    glVertex3fv(vertF);
+    glEnd();
+    
+    glBegin(GL_POLYGON);
+    glColor3fv(corBaixo);
+    glVertex3fv(vertA);
+    glVertex3fv(vertG);
+    glVertex3fv(vertD);
+    glVertex3fv(vertI);
+    glVertex3fv(vertF);
+    glVertex3fv(vertA);
+    glEnd();
+    
+    glBegin(GL_POLYGON);
+    glColor3fv(corTras);
+    glVertex3fv(vertH);
+    glVertex3fv(vertB);
     glVertex3fv(vertJ);
+    glVertex3fv(vertD);
+    glVertex3fv(vertI);
+    glVertex3fv(vertH);
     glEnd();
 }
 
@@ -443,25 +407,25 @@ void MiniPiramideDireita(){
     
     glBegin(GL_TRIANGLES);
     
-    glColor3f(1.0, 0.0, 0.0);  // Vermelho (frente)
-    glVertex3fv(vertC);
-    glVertex3fv(vertF);
+    glColor3fv(corTras);  // Base
     glVertex3fv(vertG);
+    glVertex3fv(vertJ);
+    glVertex3fv(vertI);
     
-    glColor3f(0.0, 1.0, 0.0);  // Verde    (direita)
-    glVertex3fv(vertC);
+    glColor3fv(corBaixo);
     glVertex3fv(vertG);
-    glVertex3fv(vertH);
+    glVertex3fv(vertI);
+    glVertex3fv(vertD);
     
-    glColor3f(0.0, 0.0, 0.0);  // Preto     (esquerda)
-    glVertex3fv(vertC);
-    glVertex3fv(vertH);
-    glVertex3fv(vertF);
-    
-    glColor3f(0.0, 0.0, 0.0);  // Preto    (base)
-    glVertex3fv(vertF);
+    glColor3fv(corCimaDireita);
     glVertex3fv(vertG);
-    glVertex3fv(vertH);
+    glVertex3fv(vertD);
+    glVertex3fv(vertJ);
+    
+    glColor3fv(corTras);
+    glVertex3fv(vertJ);
+    glVertex3fv(vertI);
+    glVertex3fv(vertD);
     
     glEnd();
 }
@@ -470,45 +434,45 @@ void BasePiramideDireita(){
     
     glBegin(GL_TRIANGLES);
     
-    glColor3f(0.0, 0.0, 0.0);  // Preto (topo)
-    glVertex3fv(vertC);
-    glVertex3fv(vertF);
-    glVertex3fv(vertH);
-    
-    glColor3f(0.0, 0.0, 1.0);  // Azul (base)
-    glVertex3fv(vertA);
-    glVertex3fv(vertE);
+    glColor3fv(corTras);  // Base
+    glVertex3fv(vertJ);
+    glVertex3fv(vertG);
     glVertex3fv(vertI);
-    glEnd();
     
-    glBegin(GL_POLYGON);
-    glColor3f(1.0, 0.0, 0.0);  // Vermelho (frente)
-    glVertex3fv(vertC);
-    glVertex3fv(vertF);
-    glVertex3fv(vertE);
+    glColor3fv(corCimaEsquerda);
     glVertex3fv(vertB);
     glVertex3fv(vertA);
     glVertex3fv(vertC);
     glEnd();
     
     glBegin(GL_POLYGON);
-    glColor3f(0.0, 1.0, 0.0);  // Verde (tras)
-    glVertex3fv(vertC);
-    glVertex3fv(vertA);
-    glVertex3fv(vertD);
-    glVertex3fv(vertI);
+    glColor3fv(corTras);
+    glVertex3fv(vertB);
     glVertex3fv(vertH);
     glVertex3fv(vertC);
+    glVertex3fv(vertI);
+    glVertex3fv(vertJ);
+    glVertex3fv(vertB);
     glEnd();
     
     glBegin(GL_POLYGON);
-    glColor3f(0.0, 0.0, 0.0);  // Preto (baixo)
-    glVertex3fv(vertH);
+    glColor3fv(corBaixo);
+    glVertex3fv(vertA);
     glVertex3fv(vertF);
-    glVertex3fv(vertE);
-    glVertex3fv(vertJ);
+    glVertex3fv(vertC);
     glVertex3fv(vertI);
-    glVertex3fv(vertH);
+    glVertex3fv(vertG);
+    glVertex3fv(vertA);
+    glEnd();
+    
+    glBegin(GL_POLYGON);
+    glColor3fv(corCimaDireita);
+    glVertex3fv(vertA);
+    glVertex3fv(vertG);
+    glVertex3fv(vertJ);
+    glVertex3fv(vertB);
+    glVertex3fv(vertE);
+    glVertex3fv(vertA);
     glEnd();
 }
 
@@ -516,25 +480,25 @@ void MiniPiramideTras(){
     
     glBegin(GL_TRIANGLES);
     
-    glColor3f(0.0, 0.0, 0.0);  // Preto (frente)
-    glVertex3fv(vertD);
+    glColor3fv(corCimaEsquerda);
+    glVertex3fv(vertE);
+    glVertex3fv(vertB);
+    glVertex3fv(vertH);
+    
+    glColor3fv(corTras);   // Base
+    glVertex3fv(vertE);
     glVertex3fv(vertH);
     glVertex3fv(vertJ);
     
-    glColor3f(0.0, 1.0, 0.0);  // Verde    (direita)
-    glVertex3fv(vertD);
-    glVertex3fv(vertI);
-    glVertex3fv(vertH);
-    
-    glColor3f(0.0, 0.0, 1.0);  // Azul     (esquerda)
-    glVertex3fv(vertD);
+    glColor3fv(corCimaDireita);
+    glVertex3fv(vertE);
     glVertex3fv(vertJ);
-    glVertex3fv(vertI);
+    glVertex3fv(vertB);
     
-    glColor3f(0.0, 0.0, 0.0);  // Preto    (base)
-    glVertex3fv(vertI);
-    glVertex3fv(vertJ);
+    glColor3fv(corTras);
+    glVertex3fv(vertB);
     glVertex3fv(vertH);
+    glVertex3fv(vertJ);
     
     glEnd();
 }
@@ -543,51 +507,51 @@ void BasePiramideTras(){
     
     glBegin(GL_TRIANGLES);
     
-    glColor3f(0.0, 0.0, 0.0);  // Preto (topo)
-    glVertex3fv(vertD);
-    glVertex3fv(vertJ);
+    glColor3fv(corTras);  // Base
     glVertex3fv(vertH);
-    
-    glColor3f(1.0, 0.0, 0.0);  // Vermelho (base)
-    glVertex3fv(vertA);
     glVertex3fv(vertE);
-    glVertex3fv(vertG);
-    glEnd();
+    glVertex3fv(vertJ);
     
-    glBegin(GL_POLYGON);
-    glColor3f(0.0, 1.0, 0.0);  // Verde (direita)
-    glVertex3fv(vertD);
-    glVertex3fv(vertH);
-    glVertex3fv(vertG);
+    glColor3fv(corBaixo);
     glVertex3fv(vertC);
     glVertex3fv(vertA);
     glVertex3fv(vertD);
     glEnd();
     
     glBegin(GL_POLYGON);
-    glColor3f(0.0, 0.0, 1.0);  // Azul (esquerda)
-    glVertex3fv(vertD);
-    glVertex3fv(vertJ);
-    glVertex3fv(vertE);
-    glVertex3fv(vertB);
+    glColor3fv(corCimaEsquerda);
     glVertex3fv(vertA);
-    glVertex3fv(vertD);
+    glVertex3fv(vertE);
+    glVertex3fv(vertH);
+    glVertex3fv(vertC);
+    glVertex3fv(vertF);
+    glVertex3fv(vertA);
     glEnd();
     
     glBegin(GL_POLYGON);
-    glColor3f(0.0, 0.0, 0.0);  // Preto (baixo)
-    glVertex3fv(vertJ);
-    glVertex3fv(vertH);
-    glVertex3fv(vertG);
-    glVertex3fv(vertF);
+    glColor3fv(corCimaDireita);
+    glVertex3fv(vertA);
     glVertex3fv(vertE);
     glVertex3fv(vertJ);
+    glVertex3fv(vertD);
+    glVertex3fv(vertG);
+    glVertex3fv(vertA);
+    glEnd();
+    
+    glBegin(GL_POLYGON);
+    glColor3fv(corTras);
+    glVertex3fv(vertH);
+    glVertex3fv(vertC);
+    glVertex3fv(vertI);
+    glVertex3fv(vertD);
+    glVertex3fv(vertJ);
+    glVertex3fv(vertH);
     glEnd();
 }
 
 void MostraCoordenadas(){
     glBegin(GL_LINES);
-    glColor3f(1.0, 0.0, 1.0);   // Preto
+    glColor3f(0.0, 0.0, 0.0);   // Preto
     glVertex3f(-4, 0, 0);
     glVertex3f(4, 0,  0);
     glVertex3f(0, -4, 0);
@@ -630,7 +594,7 @@ void RotacaoEsquerda_A(){
     
     // Finalmente rotacionando pelo Z
     glRotatef(fator_rotac_esquerda_A, 0, 0, 1);
-
+    
     // Translacao para rotacionar pelo Z
     glTranslatef(-0.355, -0.11, 0);
     
@@ -639,7 +603,7 @@ void RotacaoEsquerda_A(){
     
     // Rotacao inicial para posteriormente rotacionar pelo Z
     glRotatef(-49.3, 1, -1, 1);
-
+    
 }
 
 void RotacaoEsquerda_B(){
@@ -668,32 +632,32 @@ void RotacaoEsquerda_B(){
 }
 
 void RotacaoDireita_A(){
-
+    
     // Re-Rotacao inicial
-       glRotatef(-49.3, -1, -1, 1);
+    glRotatef(-49.3, -1, -1, 1);
     
     // Re-Rotacao
-       glRotatef(74.0, 0, 1, 0);
+    glRotatef(74.0, 0, 1, 0);
     
     // Re-Translacao
-       glTranslatef(-0.355, 0.11, 0);
+    glTranslatef(-0.355, 0.11, 0);
     
     // Finalmente rotacionando pelo Z
-       glRotatef(fator_rotac_direita_A, 0, 0, 1);
+    glRotatef(fator_rotac_direita_A, 0, 0, 1);
     
     // Translacao para rotacionar pelo Z
-       glTranslatef(0.355, -0.11, 0);
+    glTranslatef(0.355, -0.11, 0);
     
     // Rotacao para rotacionar pelo Z
-       glRotatef(-74.0, 0, 1, 0);
+    glRotatef(-74.0, 0, 1, 0);
     
     // Rotacao inicial para posteriormente rotacionar pelo Z
-       glRotatef(49.3, -1, -1, 1);
+    glRotatef(49.3, -1, -1, 1);
     
 }
 
 void RotacaoDireita_B(){
-
+    
     // Re-Rotacao inicial
     glRotatef(-49.3, -1, -1, 1);
     
@@ -723,7 +687,7 @@ void RotacaoCima_A(){
     glRotatef(-19.6, 1, 0, 0);
     
     //  Re-Translacao
-    glTranslatef(0, 0, -0.4);
+    glTranslatef(0, 0, 0.4);
     
     //  Finalmente rotacionando ao redor do Y
     glRotatef(fator_rotac_cima_A, 0, 1, 0);
@@ -738,12 +702,12 @@ void RotacaoCima_A(){
 
 
 void RotacaoCima_B(){
-
+    
     //  Re-Rotacao
     glRotatef(-19.6, 1, 0, 0);
     
     //  Re-Translacao
-    glTranslatef(0, 0, -0.4);
+    glTranslatef(0, 0, 0.4);
     
     //  Finalmente rotacionando ao redor do Y
     glRotatef(fator_rotac_cima_B, 0, 1, 0);
@@ -865,13 +829,8 @@ void Desenha(){
     glLoadIdentity();
     
     
-    // Rotacoes
-    RotacaoTotal();
-    RotacaoEsquerda_A();
+    TesteRotacaoFrente();
     
-    // Rotacao vertical implementada
-    Tetraedro();
-    glLoadIdentity();
     
     // Mostra as Coordenadas
     MostraCoordenadas();
