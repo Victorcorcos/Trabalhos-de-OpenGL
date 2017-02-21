@@ -28,17 +28,6 @@ float fator_rotac_frente_B=0, fator_rotac_esquerda_B=0, fator_rotac_direita_B=0,
 // Controla a interação com o teclado
 void Keyboard (unsigned char key, int x, int y);
 
-/*
- void Reshape(GLint largura, GLint altura)
- {
- glViewport(0, 0, (GLsizei)largura, (GLsizei)altura); // Set our viewport to the size of our window
- glMatrixMode(GL_PROJECTION); // Switch to the projection matrix so that we can manipulate how our scene is viewed
- glLoadIdentity(); // Reset the projection matrix to the identity matrix so that we don't get any artifacts (cleaning up)
- gluPerspective(60, (GLfloat)largura / (GLfloat)altura, -10.0, 100.0); // Set the Field of view angle (in degrees), the aspect ratio of our window, and the new and far planes
- glMatrixMode(GL_MODELVIEW); // Switch back to the model view matrix, so that we can start drawing shapes correctly
- }
- */
-
 
 //    Vertices vistos de cima:
 //
@@ -92,9 +81,6 @@ void TrianguloInterno2();
 void TrianguloInterno3();
 void TrianguloInterno4();
 
-// Atualizar tela
-void ReshapeTeste();
-
 // Piramide base3. Desenha os elementos na tela
 void Tetraedro();
 void MiniPiramideFrente();
@@ -137,20 +123,18 @@ int main(int argc, char** argv){
     
     // Inicia GLUT e processa argumentos passados por linha de comandos
     glutInit(&argc, argv);
-    glutInitWindowSize     (600, 600);
-    glutInitWindowPosition (300, 150);
     
     // Avisa a GLUT que tipo de modo de exibição deve ser usado quando a janela é criada
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
     
+    glutInitWindowSize     (650, 650);
+    glutInitWindowPosition (300, 300);
+    
     // Cria uma janela GLUT que permite a execução de comandos OpenGL
-    glutCreateWindow("Pyramix");
+    glutCreateWindow("Tetraedro Magico");
     
     // Define a função responsável por redesenhar a janela OpenGL sempre que necessário
     glutDisplayFunc(Desenha);
-    
-    // Serve para atualizar a tela sempre que possivel
-    //   glutReshapeFunc (Reshape);
     
     // Função responsável pela interação com o teclado é a Keyboard().
     glutKeyboardFunc(Keyboard);
@@ -167,60 +151,75 @@ int main(int argc, char** argv){
 
 void Keyboard (unsigned char key, int x, int y){
     
-    ReshapeTeste();
-    
     switch (key)
     {
         case '1':
             fator_rotac_frente_A += VELOCIDADE;
+            glutPostRedisplay();
             break;
         case '2':
             fator_rotac_frente_A -= VELOCIDADE;
+            glutPostRedisplay();
             break;
         case '3':
             fator_rotac_esquerda_A += VELOCIDADE;
+            glutPostRedisplay();
             break;
         case '4':
             fator_rotac_esquerda_A -= VELOCIDADE;
+            glutPostRedisplay();
             break;
         case '5':
             fator_rotac_direita_A += VELOCIDADE;
+            glutPostRedisplay();
             break;
         case '6':
             fator_rotac_direita_A -= VELOCIDADE;
+            glutPostRedisplay();
             break;
         case '7':
             fator_rotac_cima_A += VELOCIDADE;
+            glutPostRedisplay();
             break;
         case '8':
             fator_rotac_cima_A -= VELOCIDADE;
+            glutPostRedisplay();
             break;
         case 'q':
             fator_rotac_frente_B += VELOCIDADE;
+            glutPostRedisplay();
             break;
         case 'w':
             fator_rotac_frente_B -= VELOCIDADE;
+            glutPostRedisplay();
             break;
         case 'e':
             fator_rotac_esquerda_B += VELOCIDADE;
+            glutPostRedisplay();
             break;
         case 'r':
             fator_rotac_esquerda_B -= VELOCIDADE;
+            glutPostRedisplay();
             break;
         case 't':
             fator_rotac_direita_B += VELOCIDADE;
+            glutPostRedisplay();
             break;
         case 'y':
             fator_rotac_direita_B -= VELOCIDADE;
+            glutPostRedisplay();
             break;
         case 'u':
             fator_rotac_cima_B += VELOCIDADE;
+            glutPostRedisplay();
             break;
         case 'i':
             fator_rotac_cima_B -= VELOCIDADE;
+            glutPostRedisplay();
             break;
         case 32: // Barra de espaco
             fator_rotac_total += VELOCIDADE+5;
+            glutPostRedisplay();
             break;
         case 'f':
             if (fullscreen == 0)
@@ -241,15 +240,6 @@ void Keyboard (unsigned char key, int x, int y){
         default:
             printf ("   Special key %c == %d\n", key, key);
     }
-}
-
-void ReshapeTeste(){
-    if (treme==-1)
-        treme=1;
-    else
-        treme=-1;
-    glutReshapeWindow(600+treme, 600);
-    glutPositionWindow(300, 150);
 }
 
 void Triangulo1(){
@@ -648,9 +638,9 @@ void BasePiramideEsquerda(){
     glBegin(GL_TRIANGLES);
     
     glColor3fv(corTras);  // Preto (topo)
-    glVertex3fv(vertF);
-    glVertex3fv(vertI);
     glVertex3fv(vertH);
+    glVertex3fv(vertI);
+    glVertex3fv(vertF);
     
     glColor3fv(corCimaDireita);  // Verde (base)
     glVertex3fv(vertA);
@@ -1127,8 +1117,8 @@ void Desenha(){
     glLoadIdentity();
     
     
-    
-    TesteRotacaoCima();
+    // Teste da rotacao frontal
+    TesteRotacaoFrente();
     
     
     
