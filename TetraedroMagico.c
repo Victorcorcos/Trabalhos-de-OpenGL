@@ -879,7 +879,7 @@ void RotacaoEsquerda_A(){
     
     // Finalmente rotacionando pelo Z
     glRotatef(fator_rotac_esquerda_A, 0, 0, 1);
-    
+
     // Translacao para rotacionar pelo Z
     glTranslatef(-0.355, -0.11, 0);
     
@@ -888,7 +888,7 @@ void RotacaoEsquerda_A(){
     
     // Rotacao inicial para posteriormente rotacionar pelo Z
     glRotatef(-49.3, 1, -1, 1);
-    
+
 }
 
 void RotacaoEsquerda_B(){
@@ -917,32 +917,32 @@ void RotacaoEsquerda_B(){
 }
 
 void RotacaoDireita_A(){
-    
+
     // Re-Rotacao inicial
-    glRotatef(-49.3, -1, -1, 1);
+       glRotatef(-49.3, -1, -1, 1);
     
     // Re-Rotacao
-    glRotatef(74.0, 0, 1, 0);
+       glRotatef(74.0, 0, 1, 0);
     
     // Re-Translacao
-    glTranslatef(-0.355, 0.11, 0);
+       glTranslatef(-0.355, 0.11, 0);
     
     // Finalmente rotacionando pelo Z
-    glRotatef(fator_rotac_direita_A, 0, 0, 1);
+       glRotatef(fator_rotac_direita_A, 0, 0, 1);
     
     // Translacao para rotacionar pelo Z
-    glTranslatef(0.355, -0.11, 0);
+       glTranslatef(0.355, -0.11, 0);
     
     // Rotacao para rotacionar pelo Z
-    glRotatef(-74.0, 0, 1, 0);
+       glRotatef(-74.0, 0, 1, 0);
     
     // Rotacao inicial para posteriormente rotacionar pelo Z
-    glRotatef(49.3, -1, -1, 1);
+       glRotatef(49.3, -1, -1, 1);
     
 }
 
 void RotacaoDireita_B(){
-    
+
     // Re-Rotacao inicial
     glRotatef(-49.3, -1, -1, 1);
     
@@ -987,7 +987,7 @@ void RotacaoCima_A(){
 
 
 void RotacaoCima_B(){
-    
+
     //  Re-Rotacao
     glRotatef(-19.6, 1, 0, 0);
     
@@ -1117,31 +1117,67 @@ void Desenha(){
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     
+    
+    
+    
     // Fazer os glPush e glPop aqui.
     
-    RotacaoCima_A();
+
+    // Rotação da frente.
+    glPushMatrix();
     
-    TDir();
-    TEsq();
-    TCima();
-    TFrente();
+      RotacaoTotal();
     
-    T1();
-    T2();
-    T3();
-    T4();
-    T5();
-    T6();
-    T7();
-    T8();
-    T9();
-    T10();
-    T11();
-    T12();
-    T13();
-    T14();
-    T15();
-    T16();
+      glPushMatrix();
+        RotacaoFrente_A();
+        T4();
+        T8();
+        T12();
+        TFrente();
+      glPopMatrix();
+    
+      glPushMatrix();
+        RotacaoFrente_B();
+        glPushMatrix();
+          RotacaoEsquerda_A();
+          T2();
+          T5();
+          T13();
+          TEsq();
+        glPopMatrix();
+        T1();
+        T3();
+        T6();
+        T7();
+        T9();
+        T10();
+        T11();
+        T14();
+        T15();
+        T16();
+        TCima();
+        TEsq();
+        TDir();
+        TFrente();
+      glPopMatrix();
+    
+    glPopMatrix();
+
+ 
+    // Rotações Feitas:
+    //
+    // Total
+    // Minipiramide da frente
+    // Base da Minipiramide da frente
+    // Minipiramide da esquerda
+    //
+    // Como fazer as outras rotaçoes? Principalmente a Base da Minipiramide da esquerda?
+    //
+    // O problema é que é preciso utilizar de triangulos já escritos!
+    // Neste caso T4(), T8() e T12() precisariam para a Base da Minipiramide da esquerda! E não pode desenhá-los de novo.
+    //
+    
+    
     
     // Mostra as Coordenadas
     glLoadIdentity();
@@ -1156,20 +1192,20 @@ void Desenha(){
  Exemplo de glPush e glPop
  
  glPushMatrix();
- glTranslatef (-1.0, 0.0, 0.0);
- glRotatef ((GLfloat) shoulder, 0.0, 1.0, 0.0);
- glTranslatef (1.0, 0.0, 0.0);
- glPushMatrix();
- glScalef (2.0, 0.4, 1.0);
- glutWireCube (1.0);
- glPopMatrix();
- glTranslatef (1.0, 0.0, 0.0);
- glRotatef ((GLfloat) elbow, 0.0, 0.0, 1.0);
- glTranslatef (1.0, 0.0, 0.0);
- glPushMatrix();
- glScalef (2.0, 0.4, 1.0);
- glutWireCube (1.0);
- glPopMatrix();
+   glTranslatef (-1.0, 0.0, 0.0);
+   glRotatef ((GLfloat) shoulder, 0.0, 1.0, 0.0);
+   glTranslatef (1.0, 0.0, 0.0);
+   glPushMatrix();
+     glScalef (2.0, 0.4, 1.0);
+     glutWireCube (1.0);
+   glPopMatrix();
+   glTranslatef (1.0, 0.0, 0.0);
+   glRotatef ((GLfloat) elbow, 0.0, 0.0, 1.0);
+   glTranslatef (1.0, 0.0, 0.0);
+   glPushMatrix();
+     glScalef (2.0, 0.4, 1.0);
+     glutWireCube (1.0);
+   glPopMatrix();
  glPopMatrix();
  
  
