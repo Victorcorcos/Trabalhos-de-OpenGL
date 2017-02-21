@@ -56,7 +56,8 @@ GLfloat vertJ[3] = {  0.5,   0.288, 0      };
 GLfloat corCimaEsquerda[3] = { 1.0f, 0.0f, 0.0f };   // Vermelho
 GLfloat corCimaDireita[3]  = { 0.0f, 0.0f, 1.0f };   // Azul
 GLfloat corBaixo[3]        = { 0.0f, 1.0f, 0.0f };   // Verde
-GLfloat corTras[3]         = { 0.0f, 0.0f, 0.0f };   // Preto
+GLfloat corTras[3]         = { 1.0f, 1.0f, 0.0f };   // Amarelo
+GLfloat corInterna[3]      = { 0.0f, 0.0f, 0.0f };   // Preto
 
 // Triangulos Equilateros externos (De acordo com a figura localizada na pasta)
 void T1();
@@ -82,8 +83,15 @@ void TDir();
 void TCima();
 void TFrente();
 
-// Piramide base3. Desenha os elementos na tela
+// Tetraedros. Formado pelos triangulos equilateros.
 void Tetraedro();
+void TetraFrente();
+void TetraEsq();
+void TetraDir();
+void TetraCima();
+void RestoCentro();
+
+// Piramide base3.
 void MiniPiramideFrente();
 void BasePiramideFrente();
 void MiniPiramideEsquerda();
@@ -97,10 +105,10 @@ void BasePiramideCima();
 void RotacaoTotal();       // OK. Rotaciona toda a piramide
 void RotacaoFrente_A();    // OK. Para a Piramide da frente
 void RotacaoFrente_B();    // OK. Para a Base da Piramide da frente
-void RotacaoEsquerda_A();  // OK. Para a Piramide da lateral esquerda
-void RotacaoEsquerda_B();  // OK. Para a Base da Piramide da lateral esquerda
-void RotacaoDireita_A();   // OK. Para a Piramide da lateral direita
-void RotacaoDireita_B();   // OK. Para a Base da Piramide da lateral direita
+void RotacaoEsquerda_A();  // OK/ Para a Piramide da lateral esquerda
+void RotacaoEsquerda_B();  // OK/ Para a Base da Piramide da lateral esquerda
+void RotacaoDireita_A();   // OK/ Para a Piramide da lateral direita
+void RotacaoDireita_B();   // OK/ Para a Base da Piramide da lateral direita
 void RotacaoCima_A();      // OK. Para a Piramide de cima
 void RotacaoCima_B();      // OK. Para a Base da Piramide de cima
 
@@ -455,7 +463,7 @@ void TEsq(){
     
     glBegin(GL_TRIANGLES);
     
-    glColor3f(0.0, 0.0, 0.0);
+    glColor3fv(corInterna);
     glVertex3fv(vertH);
     glVertex3fv(vertF);
     glVertex3fv(vertI);
@@ -468,7 +476,7 @@ void TDir(){
     
     glBegin(GL_TRIANGLES);
     
-    glColor3f(0.0, 0.0, 0.0);
+    glColor3fv(corInterna);
     glVertex3fv(vertI);
     glVertex3fv(vertG);
     glVertex3fv(vertJ);
@@ -481,7 +489,7 @@ void TCima(){
     
     glBegin(GL_TRIANGLES);
     
-    glColor3f(0.0, 0.0, 0.0);
+    glColor3fv(corInterna);
     glVertex3fv(vertJ);
     glVertex3fv(vertE);
     glVertex3fv(vertH);
@@ -494,7 +502,7 @@ void TFrente(){
     
     glBegin(GL_TRIANGLES);
     
-    glColor3f(0.0, 0.0, 0.0);
+    glColor3fv(corInterna);
     glVertex3fv(vertE);
     glVertex3fv(vertF);
     glVertex3fv(vertG);
@@ -530,6 +538,57 @@ void Tetraedro(){
     glEnd();
     
 }
+
+void TetraFrente(){
+    
+    T4();
+    T8();
+    T12();
+    TFrente();
+    
+}
+
+void TetraEsq(){
+    
+    T2();
+    T5();
+    T13();
+    TEsq();
+    
+}
+
+void TetraDir(){
+    
+    T6();
+    T9();
+    T14();
+    TDir();
+    
+}
+
+void TetraCima(){
+    
+    T1();
+    T10();
+    T16();
+    TCima();
+    
+}
+
+void RestoCentro(){
+    
+    T3();
+    T7();
+    T11();
+    T15();
+    
+    TFrente();
+    TEsq();
+    TDir();
+    TCima();
+    
+}
+
 
 void MiniPiramideFrente(){
     
@@ -1122,44 +1181,48 @@ void Desenha(){
     
     // Fazer os glPush e glPop aqui.
     
+
+    
     glPushMatrix();
-      // Rotação total -> Barra de espaço.
-      RotacaoTotal();
-      // Rotação Minipiramide Frontal. -> 1, 2
+     // Rotaçao total por Barra de Espaço
+     RotacaoTotal();
+     glPushMatrix();
+      // Comandos: (1,2)
+      RotacaoFrente_A();
+      TetraFrente();
+     glPopMatrix();
+     glPushMatrix();
+      // Comandos: (q,w)
+      RotacaoFrente_B();
+      RestoCentro();
       glPushMatrix();
-        RotacaoFrente_A();
-        T4();
-        T8();
-        T12();
-        TFrente();
+       // Comandos: (3,4)
+       RotacaoCima_A();
+       TetraCima();
       glPopMatrix();
-      // Rotação Base da Minipiramide Frontal. -> q, w
       glPushMatrix();
-        RotacaoFrente_B();
-        // Rotação Minipiramide da Esquerda. -> 3, 4
-        glPushMatrix();
-          RotacaoEsquerda_A();
-          T2();
-          T5();
-          T13();
-          TEsq();
-        glPopMatrix();
-        T1();
-        T3();
-        T6();
-        T7();
-        T9();
-        T10();
-        T11();
-        T14();
-        T15();
-        T16();
-        TCima();
-        TEsq();
-        TDir();
-        TFrente();
+       // Comandos: (5,6)
+       RotacaoEsquerda_A();
+       TetraEsq();
       glPopMatrix();
+      glPushMatrix();
+       // Comandos: (7,8)
+       RotacaoDireita_A();
+       TetraDir();
+      glPopMatrix();
+     glPopMatrix();
     glPopMatrix();
+     
+    
+    
+    
+    // Mostra as Coordenadas
+    glLoadIdentity();
+    MostraCoordenadas();
+    
+    // Executa os comandos OpenGL para renderização
+    glFlush();
+}
 
  
     // Rotações Feitas:
@@ -1174,16 +1237,8 @@ void Desenha(){
     // O problema é que é preciso utilizar de triangulos já escritos!
     // Neste caso T4(), T8() e T12() precisariam para a Base da Minipiramide da esquerda! E não pode desenhá-los de novo.
     //
-    
-    
-    
-    // Mostra as Coordenadas
-    glLoadIdentity();
-    MostraCoordenadas();
-    
-    // Executa os comandos OpenGL para renderização
-    glFlush();
-}
+
+
 
 /*
  
