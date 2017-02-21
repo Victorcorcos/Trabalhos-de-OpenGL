@@ -14,7 +14,8 @@
 
 #define VELOCIDADE 5   // Natural: 5.
 
-int fullscreen=0, treme=-1, zcamera=0;
+// Para deixar a tela cheia
+int telacheia=0;
 
 // Valor da Rotacao do objeto inteiro
 float fator_rotac_total=0;
@@ -37,7 +38,7 @@ void Keyboard (unsigned char key, int x, int y);
 //           C   I   D
 //
 
-// Vertices do Tetraedro maior
+// Vertices do Tetraedro maior.
 GLfloat vertA[3] = {  0.0, 0.0,                1.632993161855452 };  // Centro (Frente)
 GLfloat vertB[3] = {  0.0, 1.154700538379251,  0.0  };               // Cima
 GLfloat vertC[3] = { -1.0, -0.577350269189626, 0.0  };               // Esquerda
@@ -92,9 +93,6 @@ void BasePiramideDireita();
 void MiniPiramideCima();
 void BasePiramideCima();
 
-// Mostra coordenadas (somente para testes)
-void MostraCoordenadas();
-
 // Rotacoes
 void RotacaoTotal();       // OK. Rotaciona toda a piramide
 void RotacaoFrente_A();    // OK. Para a Piramide da frente
@@ -111,6 +109,9 @@ void TesteRotacaoFrente();
 void TesteRotacaoEsquerda();
 void TesteRotacaoDireita();
 void TesteRotacaoCima();
+
+// Mostra coordenadas
+void MostraCoordenadas();
 
 // Inicializações de OpenGL que devem ser executadas antes da exibição do desenho
 void Inicializa();
@@ -222,16 +223,16 @@ void Keyboard (unsigned char key, int x, int y){
             glutPostRedisplay();
             break;
         case 'f':
-            if (fullscreen == 0)
+            if (telacheia == 0)
             {
                 glutFullScreen();
-                fullscreen = 1;
+                telacheia = 1;
             }
             else
             {
                 glutReshapeWindow(600, 600);
                 glutPositionWindow(300, 150);
-                fullscreen = 0;
+                telacheia = 0;
             }
             break;
         case 27:
