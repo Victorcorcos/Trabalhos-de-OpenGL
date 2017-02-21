@@ -1122,12 +1122,10 @@ void Desenha(){
     
     // Fazer os glPush e glPop aqui.
     
-
-    // Rotação da frente.
     glPushMatrix();
-    
+      // Rotação total -> Barra de espaço.
       RotacaoTotal();
-    
+      // Rotação Minipiramide Frontal. -> 1, 2
       glPushMatrix();
         RotacaoFrente_A();
         T4();
@@ -1135,9 +1133,10 @@ void Desenha(){
         T12();
         TFrente();
       glPopMatrix();
-    
+      // Rotação Base da Minipiramide Frontal. -> q, w
       glPushMatrix();
         RotacaoFrente_B();
+        // Rotação Minipiramide da Esquerda. -> 3, 4
         glPushMatrix();
           RotacaoEsquerda_A();
           T2();
@@ -1160,7 +1159,6 @@ void Desenha(){
         TDir();
         TFrente();
       glPopMatrix();
-    
     glPopMatrix();
 
  
