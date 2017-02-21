@@ -58,29 +58,29 @@ GLfloat corCimaDireita[3]  = { 0.0f, 0.0f, 1.0f };   // Azul
 GLfloat corBaixo[3]        = { 0.0f, 1.0f, 0.0f };   // Verde
 GLfloat corTras[3]         = { 0.0f, 0.0f, 0.0f };   // Preto
 
-// Triangulos Equilateros externos
-void Triangulo1();
-void Triangulo2();
-void Triangulo3();
-void Triangulo4();
-void Triangulo5();
-void Triangulo6();
-void Triangulo7();
-void Triangulo8();
-void Triangulo9();
-void Triangulo10();
-void Triangulo11();
-void Triangulo12();
-void Triangulo13();
-void Triangulo14();
-void Triangulo15();
-void Triangulo16();
+// Triangulos Equilateros externos (De acordo com a figura localizada na pasta)
+void T1();
+void T2();
+void T3();
+void T4();
+void T5();
+void T6();
+void T7();
+void T8();
+void T9();
+void T10();
+void T11();
+void T12();
+void T13();
+void T14();
+void T15();
+void T16();
 
 // Triangulos Equilateros internos
-void TrianguloInterno1();
-void TrianguloInterno2();
-void TrianguloInterno3();
-void TrianguloInterno4();
+void TEsq();
+void TDir();
+void TCima();
+void TFrente();
 
 // Piramide base3. Desenha os elementos na tela
 void Tetraedro();
@@ -243,7 +243,7 @@ void Keyboard (unsigned char key, int x, int y){
     }
 }
 
-void Triangulo1(){
+void T1(){
     
     glBegin(GL_TRIANGLES);
     
@@ -256,7 +256,7 @@ void Triangulo1(){
     
 }
 
-void Triangulo2(){
+void T2(){
     
     glBegin(GL_TRIANGLES);
     
@@ -269,7 +269,7 @@ void Triangulo2(){
     
 }
 
-void Triangulo3(){
+void T3(){
     
     glBegin(GL_TRIANGLES);
     
@@ -282,7 +282,7 @@ void Triangulo3(){
     
 }
 
-void Triangulo4(){
+void T4(){
     
     glBegin(GL_TRIANGLES);
     
@@ -295,7 +295,7 @@ void Triangulo4(){
     
 }
 
-void Triangulo5(){
+void T5(){
     
     glBegin(GL_TRIANGLES);
     
@@ -308,7 +308,7 @@ void Triangulo5(){
     
 }
 
-void Triangulo6(){
+void T6(){
     
     glBegin(GL_TRIANGLES);
     
@@ -321,7 +321,7 @@ void Triangulo6(){
     
 }
 
-void Triangulo7(){
+void T7(){
     
     glBegin(GL_TRIANGLES);
     
@@ -334,7 +334,7 @@ void Triangulo7(){
     
 }
 
-void Triangulo8(){
+void T8(){
     
     glBegin(GL_TRIANGLES);
     
@@ -347,7 +347,7 @@ void Triangulo8(){
     
 }
 
-void Triangulo9(){
+void T9(){
     
     glBegin(GL_TRIANGLES);
     
@@ -360,7 +360,7 @@ void Triangulo9(){
     
 }
 
-void Triangulo10(){
+void T10(){
     
     glBegin(GL_TRIANGLES);
     
@@ -373,7 +373,7 @@ void Triangulo10(){
     
 }
 
-void Triangulo11(){
+void T11(){
     
     glBegin(GL_TRIANGLES);
     
@@ -386,7 +386,7 @@ void Triangulo11(){
     
 }
 
-void Triangulo12(){
+void T12(){
     
     glBegin(GL_TRIANGLES);
     
@@ -399,11 +399,11 @@ void Triangulo12(){
     
 }
 
-void Triangulo13(){
+void T13(){
     
     glBegin(GL_TRIANGLES);
     
-    glColor3fv(corBaixo);
+    glColor3fv(corTras);
     glVertex3fv(vertC);
     glVertex3fv(vertH);
     glVertex3fv(vertI);
@@ -412,11 +412,11 @@ void Triangulo13(){
     
 }
 
-void Triangulo14(){
+void T14(){
     
     glBegin(GL_TRIANGLES);
     
-    glColor3fv(corBaixo);
+    glColor3fv(corTras);
     glVertex3fv(vertI);
     glVertex3fv(vertJ);
     glVertex3fv(vertD);
@@ -425,11 +425,11 @@ void Triangulo14(){
     
 }
 
-void Triangulo15(){
+void T15(){
     
     glBegin(GL_TRIANGLES);
     
-    glColor3fv(corBaixo);
+    glColor3fv(corTras);
     glVertex3fv(vertH);
     glVertex3fv(vertI);
     glVertex3fv(vertJ);
@@ -438,11 +438,11 @@ void Triangulo15(){
     
 }
 
-void Triangulo16(){
+void T16(){
     
     glBegin(GL_TRIANGLES);
     
-    glColor3fv(corBaixo);
+    glColor3fv(corTras);
     glVertex3fv(vertB);
     glVertex3fv(vertH);
     glVertex3fv(vertJ);
@@ -451,7 +451,7 @@ void Triangulo16(){
     
 }
 
-void TrianguloInterno1(){
+void TEsq(){
     
     glBegin(GL_TRIANGLES);
     
@@ -464,7 +464,7 @@ void TrianguloInterno1(){
     
 }
 
-void TrianguloInterno2(){
+void TDir(){
     
     glBegin(GL_TRIANGLES);
     
@@ -477,7 +477,7 @@ void TrianguloInterno2(){
     
 }
 
-void TrianguloInterno3(){
+void TCima(){
     
     glBegin(GL_TRIANGLES);
     
@@ -490,14 +490,14 @@ void TrianguloInterno3(){
     
 }
 
-void TrianguloInterno4(){
+void TFrente(){
     
     glBegin(GL_TRIANGLES);
     
     glColor3f(0.0, 0.0, 0.0);
-    glVertex3fv(vertH);
-    glVertex3fv(vertI);
-    glVertex3fv(vertJ);
+    glVertex3fv(vertE);
+    glVertex3fv(vertF);
+    glVertex3fv(vertG);
     
     glEnd();
     
@@ -1117,11 +1117,31 @@ void Desenha(){
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     
+    // Fazer os glPush e glPop aqui.
     
-    // Teste da rotacao frontal
-    TesteRotacaoFrente();
+    RotacaoCima_A();
     
+    TDir();
+    TEsq();
+    TCima();
+    TFrente();
     
+    T1();
+    T2();
+    T3();
+    T4();
+    T5();
+    T6();
+    T7();
+    T8();
+    T9();
+    T10();
+    T11();
+    T12();
+    T13();
+    T14();
+    T15();
+    T16();
     
     // Mostra as Coordenadas
     glLoadIdentity();
@@ -1131,7 +1151,29 @@ void Desenha(){
     glFlush();
 }
 
-
+/*
+ 
+ Exemplo de glPush e glPop
+ 
+ glPushMatrix();
+ glTranslatef (-1.0, 0.0, 0.0);
+ glRotatef ((GLfloat) shoulder, 0.0, 1.0, 0.0);
+ glTranslatef (1.0, 0.0, 0.0);
+ glPushMatrix();
+ glScalef (2.0, 0.4, 1.0);
+ glutWireCube (1.0);
+ glPopMatrix();
+ glTranslatef (1.0, 0.0, 0.0);
+ glRotatef ((GLfloat) elbow, 0.0, 0.0, 1.0);
+ glTranslatef (1.0, 0.0, 0.0);
+ glPushMatrix();
+ glScalef (2.0, 0.4, 1.0);
+ glutWireCube (1.0);
+ glPopMatrix();
+ glPopMatrix();
+ 
+ 
+ */
 
 
 
