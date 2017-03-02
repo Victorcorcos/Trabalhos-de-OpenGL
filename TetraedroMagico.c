@@ -12,7 +12,8 @@
 #include <GLUT/glut.h>
 #include <stdio.h>
 
-#define VELOCIDADE 5   // Natural: 5.
+#define VELOCIDADE 15      // Natural: 5
+#define INITIAL_CONFIG 0   // Rotacoes iniciais
 
 // Para deixar a tela cheia
 int telacheia=0;
@@ -21,10 +22,10 @@ int telacheia=0;
 float fator_rotac_total=0;
 
 // Valor da Rotacao das Minipiramides
-float fator_rotac_frente_A=0, fator_rotac_esquerda_A=0, fator_rotac_direita_A=0, fator_rotac_cima_A=0;
+float fator_rotac_frente_A=INITIAL_CONFIG, fator_rotac_cima_A=INITIAL_CONFIG, fator_rotac_direita_A=-INITIAL_CONFIG, fator_rotac_esquerda_A=INITIAL_CONFIG;
 
 // Valor da Rotacao das Bases das Minipiramides
-float fator_rotac_frente_B=0, fator_rotac_esquerda_B=0, fator_rotac_direita_B=0, fator_rotac_cima_B=0;
+float fator_rotac_frente_B=-INITIAL_CONFIG, fator_rotac_cima_B=INITIAL_CONFIG, fator_rotac_direita_B=INITIAL_CONFIG, fator_rotac_esquerda_B=INITIAL_CONFIG;
 
 // Controla a interação com o teclado
 void Keyboard (unsigned char key, int x, int y);
@@ -105,10 +106,10 @@ void BasePiramideCima();
 void RotacaoTotal();       // OK. Rotaciona toda a piramide
 void RotacaoFrente_A();    // OK. Para a Piramide da frente
 void RotacaoFrente_B();    // OK. Para a Base da Piramide da frente
-void RotacaoEsquerda_A();  // OK/ Para a Piramide da lateral esquerda
-void RotacaoEsquerda_B();  // OK/ Para a Base da Piramide da lateral esquerda
-void RotacaoDireita_A();   // OK/ Para a Piramide da lateral direita
-void RotacaoDireita_B();   // OK/ Para a Base da Piramide da lateral direita
+void RotacaoEsquerda_A();  // OK. Para a Piramide da lateral esquerda
+void RotacaoEsquerda_B();  // OK. Para a Base da Piramide da lateral esquerda
+void RotacaoDireita_A();   // OK. Para a Piramide da lateral direita
+void RotacaoDireita_B();   // OK. Para a Base da Piramide da lateral direita
 void RotacaoCima_A();      // OK. Para a Piramide de cima
 void RotacaoCima_B();      // OK. Para a Base da Piramide de cima
 
@@ -120,6 +121,9 @@ void TesteRotacaoCima();
 
 // Mostra coordenadas
 void MostraCoordenadas();
+
+// Mostra o menu
+void Menu();
 
 // Inicializações de OpenGL que devem ser executadas antes da exibição do desenho
 void Inicializa();
@@ -158,71 +162,73 @@ int main(int argc, char** argv){
     return 0;
 }
 
+void Menu();
+
 void Keyboard (unsigned char key, int x, int y){
     
     switch (key)
     {
-        case '1':
+        case 's':
             fator_rotac_frente_A += VELOCIDADE;
             glutPostRedisplay();
             break;
-        case '2':
+        case 'S':
             fator_rotac_frente_A -= VELOCIDADE;
             glutPostRedisplay();
             break;
-        case '3':
+        case 'a':
             fator_rotac_esquerda_A += VELOCIDADE;
             glutPostRedisplay();
             break;
-        case '4':
+        case 'A':
             fator_rotac_esquerda_A -= VELOCIDADE;
             glutPostRedisplay();
             break;
-        case '5':
+        case 'd':
             fator_rotac_direita_A += VELOCIDADE;
             glutPostRedisplay();
             break;
-        case '6':
+        case 'D':
             fator_rotac_direita_A -= VELOCIDADE;
             glutPostRedisplay();
             break;
-        case '7':
+        case 'w':
             fator_rotac_cima_A += VELOCIDADE;
             glutPostRedisplay();
             break;
-        case '8':
+        case 'W':
             fator_rotac_cima_A -= VELOCIDADE;
             glutPostRedisplay();
             break;
-        case 'q':
+        case 'g':
             fator_rotac_frente_B += VELOCIDADE;
             glutPostRedisplay();
             break;
-        case 'w':
+        case 'G':
             fator_rotac_frente_B -= VELOCIDADE;
             glutPostRedisplay();
             break;
-        case 'e':
+        case 'f':
             fator_rotac_esquerda_B += VELOCIDADE;
             glutPostRedisplay();
             break;
-        case 'r':
+        case 'F':
             fator_rotac_esquerda_B -= VELOCIDADE;
             glutPostRedisplay();
             break;
-        case 't':
+        case 'h':
             fator_rotac_direita_B += VELOCIDADE;
             glutPostRedisplay();
             break;
-        case 'y':
+        case 'H':
             fator_rotac_direita_B -= VELOCIDADE;
             glutPostRedisplay();
             break;
-        case 'u':
+        case 't':
             fator_rotac_cima_B += VELOCIDADE;
             glutPostRedisplay();
             break;
-        case 'i':
+        case 'T':
             fator_rotac_cima_B -= VELOCIDADE;
             glutPostRedisplay();
             break;
@@ -230,7 +236,7 @@ void Keyboard (unsigned char key, int x, int y){
             fator_rotac_total += VELOCIDADE+5;
             glutPostRedisplay();
             break;
-        case 'f':
+        case 'p':
             if (telacheia == 0)
             {
                 glutFullScreen();
@@ -249,6 +255,7 @@ void Keyboard (unsigned char key, int x, int y){
         default:
             printf ("   Special key %c == %d\n", key, key);
     }
+    printf("Frente: %f \n Cima: %f \n Direita: %f \n Esquerda:  %f \n", fator_rotac_frente_A, fator_rotac_cima_A, fator_rotac_direita_A, fator_rotac_esquerda_A);
 }
 
 void T1(){
@@ -1028,7 +1035,7 @@ void RotacaoDireita_B(){
 void RotacaoCima_A(){
     
     //  Re-Rotacao
-    glRotatef(-19.6, 1, 0, 0);
+   glRotatef(-19.6, 1, 0, 0);
     
     //  Re-Translacao
     glTranslatef(0, 0, 0.4);
@@ -1176,43 +1183,41 @@ void Desenha(){
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     
-    
-    
-    
     // Fazer os glPush e glPop aqui.
     
-
+    
     
     glPushMatrix();
      // Rotaçao total por Barra de Espaço
      RotacaoTotal();
      glPushMatrix();
-      // Comandos: (1,2)
+      // Comandos: (S, s)
       RotacaoFrente_A();
       TetraFrente();
      glPopMatrix();
      glPushMatrix();
-      // Comandos: (q,w)
+      // Comandos: (G, g)
       RotacaoFrente_B();
       RestoCentro();
       glPushMatrix();
-       // Comandos: (3,4)
+       // Comandos: (W, w)
        RotacaoCima_A();
        TetraCima();
       glPopMatrix();
       glPushMatrix();
-       // Comandos: (5,6)
+       // Comandos: (A, a)
        RotacaoEsquerda_A();
        TetraEsq();
       glPopMatrix();
       glPushMatrix();
-       // Comandos: (7,8)
+       // Comandos: (D, d)
        RotacaoDireita_A();
        TetraDir();
       glPopMatrix();
      glPopMatrix();
     glPopMatrix();
-     
+    
+    
     
     
     
