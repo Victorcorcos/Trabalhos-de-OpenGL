@@ -8,26 +8,40 @@
  */
 
 
+/*          Comandos do jogo
+ *
+ *  Barra
+ *   de     =>   Rotaciona o Pyraminx inteiro.
+ *  Espaço
+ *
+ *    W     =>   Rotaciona as minipiramides.
+ *  A S D   =>   Se a letra for maiuscula, rotaciona em outro sentido.
+ *
+ *    T     =>   Rotaciona as bases das minipiramides.
+ *  G H J   =>   Se a letra for maiúscula, rotaciona em outro sentido.
+ *
+ *   ESC    =>   Fecha o jogo
+ *
+ */
+
+
 // OpenGL Utility Toolkit
 #include <GLUT/glut.h>
 #include <stdio.h>
 
-#define VELOCIDADE 15        // Natural: 5
-#define INITIAL_CONFIG 0     // Rotacoes iniciais. Possiveis escolhas: 0, 120 ou 240.
-
-// Para deixar a tela cheia
-int telacheia=0;
+#define VELOCIDADE 15          // Natural: 15
+#define CONFIG_INICIAL 120     // Rotacoes iniciais. Possiveis escolhas: 0, 120 ou 240.
 
 // Valor da Rotacao do objeto inteiro
 float fator_rotac_total=0;
 
-// Valor da Rotacao das Minipiramides
-int fator_rotac_frente_A=INITIAL_CONFIG, fator_rotac_cima_A=INITIAL_CONFIG, fator_rotac_direita_A=INITIAL_CONFIG, fator_rotac_esquerda_A=INITIAL_CONFIG;
+// Angulo da Rotacao das Minipiramides
+int fator_rotac_frente_A=CONFIG_INICIAL, fator_rotac_cima_A=CONFIG_INICIAL, fator_rotac_direita_A=CONFIG_INICIAL, fator_rotac_esquerda_A=CONFIG_INICIAL;
 
-// Valor da Rotacao das Bases das Minipiramides
+// Angulo da Rotacao das Bases das Minipiramides
 int fator_rotac_frente_B=0, fator_rotac_cima_B=0, fator_rotac_direita_B=0, fator_rotac_esquerda_B=0;
 
-// Guarda a tecla que o usuario digitou no teclado
+// Guarda a tecla que o usuario digitou no teclado para descobrir o caso da rotacao.
 char caso=' ';
 
 // Controla a interação com o teclado
@@ -56,14 +70,14 @@ GLfloat vertH[3] = {  -0.5,  0.288, 0      };
 GLfloat vertI[3] = {  0,    -0.578, 0      };
 GLfloat vertJ[3] = {  0.5,   0.288, 0      };
 
-// Cores das faces do Tetraedro inicial
+// Cores iniciais das faces do Tetraedro
 GLfloat corCimaEsquerda[3] = { 1.0f, 0.0f, 0.0f };   // Vermelho
 GLfloat corCimaDireita[3]  = { 0.0f, 0.0f, 1.0f };   // Azul
 GLfloat corBaixo[3]        = { 0.0f, 1.0f, 0.0f };   // Verde
 GLfloat corTras[3]         = { 1.0f, 1.0f, 0.0f };   // Amarelo
 GLfloat corInterna[3]      = { 0.0f, 0.0f, 0.0f };   // Preto
 
-// Cores de cada triangulo (Inicializados na funçao apropriada)
+// Cores de cada triangulo equilatero (Inicializados na funçao apropriada)
 GLfloat corT1[3];
 GLfloat corT2[3];
 GLfloat corT3[3];
@@ -85,7 +99,7 @@ GLfloat corTDir[3];
 GLfloat corTCima[3];
 GLfloat corTFrente[3];
 
-// Triangulos Equilateros externos (De acordo com a figura localizada na pasta)
+// Funções de desenhar cada triangulos equilateros externo
 void T1();
 void T2();
 void T3();
@@ -103,29 +117,19 @@ void T14();
 void T15();
 void T16();
 
-// Triangulos Equilateros internos
+// Funções de desenhar os triangulos equilateros internos
 void TEsq();
 void TDir();
 void TCima();
 void TFrente();
 
-// Tetraedros. Formado pelos triangulos equilateros.
-void Tetraedro();
-void TetraFrente();
-void TetraEsq();
-void TetraDir();
-void TetraCima();
-void RestoCentro();
-
-// Piramide base3.
-void MiniPiramideFrente();
-void BasePiramideFrente();
-void MiniPiramideEsquerda();
-void BasePiramideEsquerda();
-void MiniPiramideDireita();
-void BasePiramideDireita();
-void MiniPiramideCima();
-void BasePiramideCima();
+// Funções de desenhar os Tetraedros, formados por triangulos equilateros.
+void Pyraminx();
+void PyraFrente();
+void PyraEsq();
+void PyraDir();
+void PyraCima();
+void RestoCentro();  // A figura formada no centro é um Octaedro.
 
 // Rotacoes
 void RotacaoTotal();       // OK. Rotaciona toda a piramide
@@ -138,23 +142,48 @@ void RotacaoDireita_B();   // OK. Para a Base da Piramide da lateral direita
 void RotacaoCima_A();      // OK. Para a Piramide de cima
 void RotacaoCima_B();      // OK. Para a Base da Piramide de cima
 
-// Teste de Rotacoes
-void TesteRotacaoFrente();
-void TesteRotacaoEsquerda();
-void TesteRotacaoDireita();
-void TesteRotacaoCima();
+// Funções que atualiza o Pyraminx após realizar cada rotação.
+void AtualizaPyraminx_s();
+void AtualizaPyraminx_w();
+void AtualizaPyraminx_a();
+void AtualizaPyraminx_d();
+void AtualizaPyraminx_g();
+void AtualizaPyraminx_t();
+void AtualizaPyraminx_f();
+void AtualizaPyraminx_h();
+
+// Função que atualiza o Pyraminx de forma geral.
+void AtualizaPyraminx();
+
+// Funções que determinam se partes do Pyraminx pode ser rotacionado.
+// As partes só devem rotacionar se o resto está devidamente encaixado.
+// 1 -> Pode rotacionar. 0 -> Não pode rotacionar.
+int pode_rotacionar_s();
+int pode_rotacionar_w();
+int pode_rotacionar_a();
+int pode_rotacionar_d();
+int pode_rotacionar_g();
+int pode_rotacionar_t();
+int pode_rotacionar_f();
+int pode_rotacionar_h();
 
 // Mostra coordenadas
 void MostraCoordenadas();
 
-// Copia vetor1 recebe o vetor2
-void CopiaVetor(GLfloat* vetor1, GLfloat* vetor2);
-
-// Inicializa Cores de cada triangulo
+// Inicializa cores de cada triangulo que forma o Pyraminx
 void InicializaCoresTriangulos();
 
 // Mostra o menu
 void Menu();
+
+// vetor1 = vetor2
+void CopiaVetor(GLfloat* vetor1, GLfloat* vetor2);
+
+// vetor1 = vetor2. vetor2 = vetor3. vetor3 = vetor1
+void CopiaVetores(GLfloat* vetor1, GLfloat* vetor2, GLfloat* vetor3);
+
+// Copia uma sequencia de vetores
+void CopiaSequenciaVetores(GLfloat* vetor1, GLfloat* vetor2, GLfloat* vetor3, GLfloat* vetor4, GLfloat* vetor5, GLfloat* vetor6, GLfloat* vetor7, GLfloat* vetor8, GLfloat* vetor9, GLfloat* vetor10, GLfloat* vetor11, GLfloat* vetor12);
 
 // Inicializações de OpenGL que devem ser executadas antes da exibição do desenho
 void Inicializa();
@@ -175,7 +204,7 @@ int main(int argc, char** argv){
     glutInitWindowPosition (300, 300);
     
     // Cria uma janela GLUT que permite a execução de comandos OpenGL
-    glutCreateWindow("Tetraedro Magico");
+    glutCreateWindow("Pyraminx Magico");
     
     // Define a função responsável por redesenhar a janela OpenGL sempre que necessário
     glutDisplayFunc(Desenha);
@@ -195,19 +224,108 @@ int main(int argc, char** argv){
 
 void Menu();
 
+int pode_rotacionar_s(){
+    if((fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
+       (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
+       (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
+       (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
+       (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
+       (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
+       (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 ))
+        return 1;
+    return 0;
+}
+
+int pode_rotacionar_w(){
+    if((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
+       (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
+       (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
+       (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
+       (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
+       (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
+       (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 ))
+        return 1;
+    return 0;
+}
+
+int pode_rotacionar_a(){
+    if((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
+       (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
+       (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
+       (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
+       (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
+       (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
+       (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 ))
+        return 1;
+    return 0;
+}
+
+int pode_rotacionar_d(){
+    if((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
+       (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
+       (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
+       (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
+       (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
+       (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
+       (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 ))
+        return 1;
+    return 0;
+}
+
+int pode_rotacionar_g(){
+    if((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
+       (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
+       (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
+       (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
+       (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
+       (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
+       (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240))
+        return 1;
+    return 0;
+}
+
+int pode_rotacionar_t(){
+    if((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
+       (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
+       (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
+       (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
+       (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
+       (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
+       (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 ))
+        return 1;
+    return 0;
+}
+
+int pode_rotacionar_f(){
+    if((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
+       (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
+       (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
+       (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
+       (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
+       (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
+       (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 ))
+        return 1;
+    return 0;
+}
+
+int pode_rotacionar_h(){
+    if((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
+       (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
+       (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
+       (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
+       (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
+       (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
+       (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 ))
+        return 1;
+    return 0;
+}
+
 void Keyboard (unsigned char key, int x, int y){
     
     switch (key)
     {
         case 's':
-            if ((fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
-                (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
-                (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
-                (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
-                (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
-                (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
-                (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 )
-                )
+            if (pode_rotacionar_s())
             {
                 fator_rotac_frente_A = (fator_rotac_frente_A + VELOCIDADE) % 360;
                 caso = 's';
@@ -215,14 +333,7 @@ void Keyboard (unsigned char key, int x, int y){
             }
             break;
         case 'S':
-            if ((fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
-                (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
-                (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
-                (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
-                (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
-                (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
-                (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 )
-                )
+            if (pode_rotacionar_s())
             {
                 fator_rotac_frente_A = (360+(fator_rotac_frente_A - VELOCIDADE)) % 360;
                 caso = 'S';
@@ -230,14 +341,7 @@ void Keyboard (unsigned char key, int x, int y){
             }
             break;
         case 'a':
-            if ((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
-                (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
-                (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
-                (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
-                (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
-                (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
-                (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 )
-                )
+            if (pode_rotacionar_a())
             {
                 fator_rotac_esquerda_A = (fator_rotac_esquerda_A + VELOCIDADE) % 360;
                 caso = 'a';
@@ -245,14 +349,7 @@ void Keyboard (unsigned char key, int x, int y){
             }
             break;
         case 'A':
-            if ((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
-                (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
-                (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
-                (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
-                (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
-                (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
-                (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 )
-                )
+            if (pode_rotacionar_a())
             {
                 fator_rotac_esquerda_A = (360+(fator_rotac_esquerda_A - VELOCIDADE)) % 360;
                 caso = 'A';
@@ -260,14 +357,7 @@ void Keyboard (unsigned char key, int x, int y){
             }
             break;
         case 'd':
-            if ((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
-                (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
-                (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
-                (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
-                (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
-                (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
-                (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 )
-                )
+            if (pode_rotacionar_d())
             {
                 fator_rotac_direita_A = (fator_rotac_direita_A + VELOCIDADE) % 360;
                 caso = 'd';
@@ -275,14 +365,7 @@ void Keyboard (unsigned char key, int x, int y){
             }
             break;
         case 'D':
-            if ((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
-                (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
-                (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
-                (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
-                (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
-                (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
-                (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 )
-                )
+            if (pode_rotacionar_d())
             {
                 fator_rotac_direita_A = (360+(fator_rotac_direita_A - VELOCIDADE)) % 360;
                 caso = 'D';
@@ -290,14 +373,7 @@ void Keyboard (unsigned char key, int x, int y){
             }
             break;
         case 'w':
-            if ((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
-                (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
-                (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
-                (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
-                (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
-                (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
-                (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 )
-                )
+            if (pode_rotacionar_w())
             {
                 fator_rotac_cima_A = (fator_rotac_cima_A + VELOCIDADE) % 360;
                 caso = 'w';
@@ -305,14 +381,7 @@ void Keyboard (unsigned char key, int x, int y){
             }
             break;
         case 'W':
-            if ((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
-                (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
-                (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
-                (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
-                (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
-                (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
-                (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 )
-                )
+            if (pode_rotacionar_w())
             {
                 fator_rotac_cima_A = (360+(fator_rotac_cima_A - VELOCIDADE)) % 360;
                 caso = 'W';
@@ -320,14 +389,7 @@ void Keyboard (unsigned char key, int x, int y){
             }
             break;
         case 'g':
-            if ((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
-                (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
-                (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
-                (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
-                (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
-                (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
-                (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240)
-                )
+            if (pode_rotacionar_g())
             {
                 fator_rotac_frente_B = (fator_rotac_frente_B + VELOCIDADE) % 360;
                 caso = 'g';
@@ -335,14 +397,7 @@ void Keyboard (unsigned char key, int x, int y){
             }
             break;
         case 'G':
-            if ((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
-                (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
-                (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
-                (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
-                (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
-                (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
-                (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240)
-                )
+            if (pode_rotacionar_g())
             {
                 fator_rotac_frente_B = (360+(fator_rotac_frente_B - VELOCIDADE)) % 360;
                 caso = 'G';
@@ -350,14 +405,7 @@ void Keyboard (unsigned char key, int x, int y){
             }
             break;
         case 'f':
-            if ((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
-                (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
-                (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
-                (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
-                (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
-                (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
-                (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 )
-                )
+            if (pode_rotacionar_f())
             {
                 fator_rotac_esquerda_B = (fator_rotac_esquerda_B + VELOCIDADE) % 360;
                 caso = 'f';
@@ -365,14 +413,7 @@ void Keyboard (unsigned char key, int x, int y){
             }
             break;
         case 'F':
-            if ((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
-                (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
-                (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
-                (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
-                (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
-                (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
-                (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 )
-                )
+            if (pode_rotacionar_f())
             {
                 fator_rotac_esquerda_B = (360+(fator_rotac_esquerda_B - VELOCIDADE)) % 360;
                 caso = 'F';
@@ -380,14 +421,7 @@ void Keyboard (unsigned char key, int x, int y){
             }
             break;
         case 'h':
-            if ((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
-                (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
-                (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
-                (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
-                (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
-                (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
-                (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 )
-                )
+            if (pode_rotacionar_h())
             {
                 fator_rotac_direita_B = (fator_rotac_direita_B + VELOCIDADE) % 360;
                 caso = 'h';
@@ -395,14 +429,7 @@ void Keyboard (unsigned char key, int x, int y){
             }
             break;
         case 'H':
-            if ((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
-                (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
-                (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
-                (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
-                (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
-                (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
-                (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 )
-                )
+            if (pode_rotacionar_h())
             {
                 fator_rotac_direita_B = (360+(fator_rotac_direita_B - VELOCIDADE)) % 360;
                 caso = 'H';
@@ -410,14 +437,7 @@ void Keyboard (unsigned char key, int x, int y){
             }
             break;
         case 't':
-            if ((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
-                (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
-                (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
-                (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
-                (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
-                (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
-                (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 )
-                )
+            if (pode_rotacionar_t())
             {
                 fator_rotac_cima_B = (fator_rotac_cima_B + VELOCIDADE) % 360;
                 caso = 't';
@@ -425,14 +445,7 @@ void Keyboard (unsigned char key, int x, int y){
             }
             break;
         case 'T':
-            if ((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
-                (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
-                (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
-                (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
-                (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
-                (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
-                (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 )
-                )
+            if (pode_rotacionar_t())
             {
                 fator_rotac_cima_B = (360+(fator_rotac_cima_B - VELOCIDADE)) % 360;
                 caso = 'T';
@@ -443,26 +456,12 @@ void Keyboard (unsigned char key, int x, int y){
             fator_rotac_total += VELOCIDADE+5;
             glutPostRedisplay();
             break;
-        case 'p':
-            if (telacheia == 0)
-            {
-                glutFullScreen();
-                telacheia = 1;
-            }
-            else
-            {
-                glutReshapeWindow(600, 600);
-                glutPositionWindow(300, 150);
-                telacheia = 0;
-            }
-            break;
         case 27:
             exit(0);
             break;
         default:
             printf ("   Special key %c == %d\n", key, key);
     }
-    printf("Frente: %d \n Cima: %d \n Direita: %d \n Esquerda:  %d \n", fator_rotac_frente_A, fator_rotac_cima_A, fator_rotac_direita_A, fator_rotac_esquerda_A);
 }
 
 void T1(){
@@ -725,35 +724,17 @@ void TFrente(){
     
 }
 
-void Tetraedro(){
+void Pyraminx(){
     
-    glBegin(GL_TRIANGLES);
-    
-    glColor3fv(corCimaEsquerda);
-    glVertex3fv(vertA);
-    glVertex3fv(vertB);
-    glVertex3fv(vertC);
-    
-    glColor3fv(corBaixo);
-    glVertex3fv(vertA);
-    glVertex3fv(vertC);
-    glVertex3fv(vertD);
-    
-    glColor3fv(corCimaDireita);
-    glVertex3fv(vertA);
-    glVertex3fv(vertD);
-    glVertex3fv(vertB);
-    
-    glColor3fv(corTras);
-    glVertex3fv(vertC);
-    glVertex3fv(vertD);
-    glVertex3fv(vertB);
-    
-    glEnd();
+    PyraFrente();
+    PyraCima();
+    PyraEsq();
+    PyraDir();
+    RestoCentro();
     
 }
 
-void TetraFrente(){
+void PyraFrente(){
     
     T4();
     T8();
@@ -762,7 +743,7 @@ void TetraFrente(){
     
 }
 
-void TetraEsq(){
+void PyraEsq(){
     
     T2();
     T5();
@@ -771,7 +752,7 @@ void TetraEsq(){
     
 }
 
-void TetraDir(){
+void PyraDir(){
     
     T6();
     T9();
@@ -780,7 +761,7 @@ void TetraDir(){
     
 }
 
-void TetraCima(){
+void PyraCima(){
     
     T1();
     T10();
@@ -800,307 +781,6 @@ void RestoCentro(){
     TEsq();
     TDir();
     TCima();
-    
-}
-
-
-void MiniPiramideFrente(){
-    
-    glBegin(GL_TRIANGLES);
-    
-    glColor3fv(corCimaEsquerda);
-    glVertex3fv(vertA);
-    glVertex3fv(vertE);
-    glVertex3fv(vertF);
-    
-    glColor3fv(corBaixo);
-    glVertex3fv(vertA);
-    glVertex3fv(vertF);
-    glVertex3fv(vertG);
-    
-    glColor3fv(corCimaDireita);
-    glVertex3fv(vertA);
-    glVertex3fv(vertG);
-    glVertex3fv(vertE);
-    
-    glColor3fv(corTras); // (base)
-    glVertex3fv(vertG);
-    glVertex3fv(vertE);
-    glVertex3fv(vertF);
-    
-    glEnd();
-    
-}
-
-void BasePiramideFrente(){
-    
-    glBegin(GL_TRIANGLES);
-    
-    glColor3fv(corTras);  // Preto (topo)
-    glVertex3fv(vertG);
-    glVertex3fv(vertE);
-    glVertex3fv(vertF);
-    
-    glColor3fv(corTras);  // Preto (base)
-    glVertex3fv(vertB);
-    glVertex3fv(vertD);
-    glVertex3fv(vertC);
-    glEnd();
-    
-    glBegin(GL_POLYGON);
-    glColor3fv(corCimaEsquerda);
-    glVertex3fv(vertE);
-    glVertex3fv(vertF);
-    glVertex3fv(vertC);
-    glVertex3fv(vertH);
-    glVertex3fv(vertB);
-    glVertex3fv(vertE);
-    glEnd();
-    
-    glBegin(GL_POLYGON);
-    glColor3fv(corBaixo);
-    glVertex3fv(vertF);
-    glVertex3fv(vertG);
-    glVertex3fv(vertD);
-    glVertex3fv(vertI);
-    glVertex3fv(vertC);
-    glVertex3fv(vertF);
-    glEnd();
-    
-    glBegin(GL_POLYGON);
-    glColor3fv(corCimaDireita);
-    glVertex3fv(vertG);
-    glVertex3fv(vertE);
-    glVertex3fv(vertB);
-    glVertex3fv(vertJ);
-    glVertex3fv(vertD);
-    glVertex3fv(vertG);
-    glEnd();
-    
-}
-
-void MiniPiramideEsquerda(){
-    
-    glBegin(GL_TRIANGLES);
-    
-    glColor3fv(corCimaEsquerda);
-    glVertex3fv(vertF);
-    glVertex3fv(vertH);
-    glVertex3fv(vertC);
-    
-    glColor3fv(corTras);
-    glVertex3fv(vertF);
-    glVertex3fv(vertI);
-    glVertex3fv(vertH);
-    
-    glColor3fv(corBaixo);
-    glVertex3fv(vertF);
-    glVertex3fv(vertC);
-    glVertex3fv(vertI);
-    
-    glColor3fv(corTras);  // Preto    (base)
-    glVertex3fv(vertH);
-    glVertex3fv(vertC);
-    glVertex3fv(vertI);
-    
-    glEnd();
-    
-}
-
-void BasePiramideEsquerda(){
-    
-    glBegin(GL_TRIANGLES);
-    
-    glColor3fv(corTras);  // Preto (topo)
-    glVertex3fv(vertH);
-    glVertex3fv(vertI);
-    glVertex3fv(vertF);
-    
-    glColor3fv(corCimaDireita);  // Verde (base)
-    glVertex3fv(vertA);
-    glVertex3fv(vertD);
-    glVertex3fv(vertB);
-    glEnd();
-    
-    glBegin(GL_POLYGON);
-    glColor3fv(corCimaEsquerda);
-    glVertex3fv(vertF);
-    glVertex3fv(vertA);
-    glVertex3fv(vertE);
-    glVertex3fv(vertB);
-    glVertex3fv(vertH);
-    glVertex3fv(vertF);
-    glEnd();
-    
-    glBegin(GL_POLYGON);
-    glColor3fv(corBaixo);
-    glVertex3fv(vertA);
-    glVertex3fv(vertG);
-    glVertex3fv(vertD);
-    glVertex3fv(vertI);
-    glVertex3fv(vertF);
-    glVertex3fv(vertA);
-    glEnd();
-    
-    glBegin(GL_POLYGON);
-    glColor3fv(corTras);
-    glVertex3fv(vertH);
-    glVertex3fv(vertB);
-    glVertex3fv(vertJ);
-    glVertex3fv(vertD);
-    glVertex3fv(vertI);
-    glVertex3fv(vertH);
-    glEnd();
-    
-}
-
-void MiniPiramideDireita(){
-    
-    glBegin(GL_TRIANGLES);
-    
-    glColor3fv(corTras);  // Base
-    glVertex3fv(vertG);
-    glVertex3fv(vertJ);
-    glVertex3fv(vertI);
-    
-    glColor3fv(corBaixo);
-    glVertex3fv(vertG);
-    glVertex3fv(vertI);
-    glVertex3fv(vertD);
-    
-    glColor3fv(corCimaDireita);
-    glVertex3fv(vertG);
-    glVertex3fv(vertD);
-    glVertex3fv(vertJ);
-    
-    glColor3fv(corTras);
-    glVertex3fv(vertJ);
-    glVertex3fv(vertI);
-    glVertex3fv(vertD);
-    
-    glEnd();
-    
-}
-
-void BasePiramideDireita(){
-    
-    glBegin(GL_TRIANGLES);
-    
-    glColor3fv(corTras);  // Base
-    glVertex3fv(vertJ);
-    glVertex3fv(vertG);
-    glVertex3fv(vertI);
-    
-    glColor3fv(corCimaEsquerda);
-    glVertex3fv(vertB);
-    glVertex3fv(vertA);
-    glVertex3fv(vertC);
-    glEnd();
-    
-    glBegin(GL_POLYGON);
-    glColor3fv(corTras);
-    glVertex3fv(vertB);
-    glVertex3fv(vertH);
-    glVertex3fv(vertC);
-    glVertex3fv(vertI);
-    glVertex3fv(vertJ);
-    glVertex3fv(vertB);
-    glEnd();
-    
-    glBegin(GL_POLYGON);
-    glColor3fv(corBaixo);
-    glVertex3fv(vertA);
-    glVertex3fv(vertF);
-    glVertex3fv(vertC);
-    glVertex3fv(vertI);
-    glVertex3fv(vertG);
-    glVertex3fv(vertA);
-    glEnd();
-    
-    glBegin(GL_POLYGON);
-    glColor3fv(corCimaDireita);
-    glVertex3fv(vertA);
-    glVertex3fv(vertG);
-    glVertex3fv(vertJ);
-    glVertex3fv(vertB);
-    glVertex3fv(vertE);
-    glVertex3fv(vertA);
-    glEnd();
-    
-}
-
-void MiniPiramideCima(){
-    
-    glBegin(GL_TRIANGLES);
-    
-    glColor3fv(corCimaEsquerda);
-    glVertex3fv(vertE);
-    glVertex3fv(vertB);
-    glVertex3fv(vertH);
-    
-    glColor3fv(corTras);   // Base
-    glVertex3fv(vertE);
-    glVertex3fv(vertH);
-    glVertex3fv(vertJ);
-    
-    glColor3fv(corCimaDireita);
-    glVertex3fv(vertE);
-    glVertex3fv(vertJ);
-    glVertex3fv(vertB);
-    
-    glColor3fv(corTras);
-    glVertex3fv(vertB);
-    glVertex3fv(vertH);
-    glVertex3fv(vertJ);
-    
-    glEnd();
-    
-}
-
-void BasePiramideCima(){
-    
-    glBegin(GL_TRIANGLES);
-    
-    glColor3fv(corTras);  // Base
-    glVertex3fv(vertH);
-    glVertex3fv(vertE);
-    glVertex3fv(vertJ);
-    
-    glColor3fv(corBaixo);
-    glVertex3fv(vertC);
-    glVertex3fv(vertA);
-    glVertex3fv(vertD);
-    glEnd();
-    
-    glBegin(GL_POLYGON);
-    glColor3fv(corCimaEsquerda);
-    glVertex3fv(vertA);
-    glVertex3fv(vertE);
-    glVertex3fv(vertH);
-    glVertex3fv(vertC);
-    glVertex3fv(vertF);
-    glVertex3fv(vertA);
-    glEnd();
-    
-    glBegin(GL_POLYGON);
-    glColor3fv(corCimaDireita);
-    glVertex3fv(vertA);
-    glVertex3fv(vertE);
-    glVertex3fv(vertJ);
-    glVertex3fv(vertD);
-    glVertex3fv(vertG);
-    glVertex3fv(vertA);
-    glEnd();
-    
-    glBegin(GL_POLYGON);
-    glColor3fv(corTras);
-    glVertex3fv(vertH);
-    glVertex3fv(vertC);
-    glVertex3fv(vertI);
-    glVertex3fv(vertD);
-    glVertex3fv(vertJ);
-    glVertex3fv(vertH);
-    glEnd();
     
 }
 
@@ -1129,7 +809,6 @@ void RotacaoFrente_A(){
     
     //            Rotação
     glRotatef(-fator_rotac_frente_A, 0, 0, 1);
-    
     
 }
 
@@ -1279,88 +958,6 @@ void RotacaoCima_B(){
     
 }
 
-void TesteRotacaoFrente(){
-    
-    // Rotaciona
-    RotacaoTotal();
-    RotacaoFrente_B();
-    
-    // Desenha base da piramide do topo
-    BasePiramideFrente();
-    glLoadIdentity();
-    
-    // Rotaciona
-    RotacaoTotal();
-    RotacaoFrente_A();
-    
-    // Desenha piramide do topo
-    MiniPiramideFrente();
-    glLoadIdentity();
-    
-}
-
-void TesteRotacaoCima(){
-    
-    // Rotaciona
-    RotacaoTotal();
-    RotacaoCima_B();
-    
-    // Desenha base da piramide traseira
-    BasePiramideCima();
-    glLoadIdentity();
-    
-    // Rotaciona
-    RotacaoTotal();
-    RotacaoCima_A();
-    
-    // Desenha piramide traseira
-    MiniPiramideCima();
-    glLoadIdentity();
-    
-}
-
-void TesteRotacaoEsquerda(){
-    
-    // Rotaciona
-    RotacaoTotal();
-    RotacaoEsquerda_B();
-    
-    // Desenha base da piramide esquerda
-    BasePiramideEsquerda();
-    glLoadIdentity();
-    
-    
-    // Rotaciona
-    RotacaoTotal();
-    RotacaoEsquerda_A();
-    
-    // Desenha piramide esquerda
-    MiniPiramideEsquerda();
-    glLoadIdentity();
-    
-}
-
-void TesteRotacaoDireita(){
-    
-    // Rotaciona
-    RotacaoTotal();
-    RotacaoDireita_B();
-    
-    // Desenha base da piramide direita
-    BasePiramideDireita();
-    glLoadIdentity();
-    
-    
-    // Rotaciona
-    RotacaoTotal();
-    RotacaoDireita_A();
-    
-    // Desenha piramide direita
-    MiniPiramideDireita();
-    glLoadIdentity();
-    
-}
-
 void CopiaVetor(GLfloat* vetor1, GLfloat* vetor2){
     
     int i=0;
@@ -1371,6 +968,7 @@ void CopiaVetor(GLfloat* vetor1, GLfloat* vetor2){
 }
 
 void InicializaCoresTriangulos(){
+    
     CopiaVetor(corT1, corCimaEsquerda);
     CopiaVetor(corT2, corCimaEsquerda);
     CopiaVetor(corT3, corCimaEsquerda);
@@ -1391,6 +989,167 @@ void InicializaCoresTriangulos(){
     CopiaVetor(corTCima, corInterna);
     CopiaVetor(corTEsq, corInterna);
     CopiaVetor(corTDir, corInterna);
+    
+}
+
+void CopiaVetores(GLfloat* vetor1, GLfloat* vetor2, GLfloat* vetor3){
+    
+    GLfloat vetoraux[3];
+    
+    CopiaVetor(vetoraux, vetor1);
+    CopiaVetor(vetor1, vetor2);
+    CopiaVetor(vetor2, vetor3);
+    CopiaVetor(vetor3, vetoraux);
+    
+}
+
+void CopiaSequenciaVetores(GLfloat* vetor1, GLfloat* vetor2, GLfloat* vetor3, GLfloat* vetor4, GLfloat* vetor5, GLfloat* vetor6, GLfloat* vetor7, GLfloat* vetor8, GLfloat* vetor9, GLfloat* vetor10, GLfloat* vetor11, GLfloat* vetor12){
+    
+    GLfloat vetoraux1[3];
+    GLfloat vetoraux2[3];
+    GLfloat vetoraux3[3];
+    
+    CopiaVetor(vetoraux1, vetor1);
+    CopiaVetor(vetoraux2, vetor2);
+    CopiaVetor(vetoraux3, vetor3);
+    
+    CopiaVetor(vetor1, vetor7);
+    CopiaVetor(vetor2, vetor8);
+    CopiaVetor(vetor3, vetor9);
+    
+    CopiaVetor(vetor7, vetor4);
+    CopiaVetor(vetor8, vetor5);
+    CopiaVetor(vetor9, vetor6);
+    
+    CopiaVetor(vetor4, vetoraux1);
+    CopiaVetor(vetor5, vetoraux2);
+    CopiaVetor(vetor6, vetoraux3);
+    
+    CopiaVetores(vetor10, vetor12, vetor11);
+    
+}
+
+void AtualizaPyraminx_s() {
+    
+    if (fator_rotac_frente_A == 120 || fator_rotac_frente_A == 240){
+        CopiaVetores(corT8, corT12, corT4);
+        if (fator_rotac_frente_A == 240)
+            CopiaVetores(corT8, corT12, corT4);
+        fator_rotac_frente_A = 0;
+        glClear  (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        RotacaoTotal();
+        Pyraminx();
+    }
+    
+}
+
+void AtualizaPyraminx_w() {
+    
+    if (fator_rotac_cima_A == 120 || fator_rotac_cima_A == 240){
+        CopiaVetores(corT1, corT16, corT10);
+        if (fator_rotac_cima_A == 240)
+            CopiaVetores(corT1, corT16, corT10);
+        fator_rotac_cima_A = 0;
+        glClear  (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        RotacaoTotal();
+        Pyraminx();
+    }
+    
+}
+
+void AtualizaPyraminx_a() {
+    
+    if (fator_rotac_esquerda_A == 120 || fator_rotac_esquerda_A == 240){
+        CopiaVetores(corT2, corT5, corT13);
+        if (fator_rotac_esquerda_A == 240)
+            CopiaVetores(corT2, corT5, corT13);
+        fator_rotac_esquerda_A = 0;
+        glClear  (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        RotacaoTotal();
+        Pyraminx();
+    }
+    
+}
+
+void AtualizaPyraminx_d() {
+    
+    if (fator_rotac_direita_A == 120 || fator_rotac_direita_A == 240){
+        CopiaVetores(corT9, corT14, corT6);
+        if (fator_rotac_direita_A == 240)
+            CopiaVetores(corT9, corT14, corT6);
+        fator_rotac_direita_A = 0;
+        glClear  (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        RotacaoTotal();
+        Pyraminx();
+    }
+    
+}
+
+void AtualizaPyraminx_g() {
+    
+    if (fator_rotac_frente_B == 120 || fator_rotac_frente_B == 240){
+        CopiaSequenciaVetores(corT2, corT3, corT1, corT10, corT11, corT9, corT6, corT7, corT5, corT13, corT16, corT14);
+        if (fator_rotac_frente_B == 240)
+            CopiaSequenciaVetores(corT2, corT3, corT1, corT10, corT11, corT9, corT6, corT7, corT5, corT13, corT16, corT14);
+        fator_rotac_frente_B = 0;
+        glClear  (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        RotacaoTotal();
+        Pyraminx();
+    }
+    
+}
+
+void AtualizaPyraminx_t() {
+    
+    if (fator_rotac_cima_B == 120 || fator_rotac_cima_B == 240){
+        CopiaSequenciaVetores(corT2, corT3, corT4, corT12, corT11, corT9, corT14, corT15, corT13, corT5, corT8, corT6);
+        if (fator_rotac_cima_B == 240)
+            CopiaSequenciaVetores(corT2, corT3, corT4, corT12, corT11, corT9, corT14, corT15, corT13, corT5, corT8, corT6);
+        fator_rotac_cima_B = 0;
+        glClear  (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        RotacaoTotal();
+        Pyraminx();
+    }
+    
+}
+
+void AtualizaPyraminx_f() {
+    
+    if (fator_rotac_esquerda_B == 120 || fator_rotac_esquerda_B == 240){
+        CopiaSequenciaVetores(corT6, corT7, corT8, corT4, corT3, corT1, corT16, corT15, corT14, corT9, corT12, corT10);
+        if (fator_rotac_esquerda_B == 240)
+            CopiaSequenciaVetores(corT6, corT7, corT8, corT4, corT3, corT1, corT16, corT15, corT14, corT9, corT12, corT10);
+        fator_rotac_esquerda_B = 0;
+        glClear  (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        RotacaoTotal();
+        Pyraminx();
+    }
+    
+}
+
+void AtualizaPyraminx_h() {
+    
+    if (fator_rotac_direita_B == 120 || fator_rotac_direita_B == 240){
+        CopiaSequenciaVetores(corT10, corT11, corT12, corT8, corT7, corT5, corT13, corT15, corT16, corT1, corT4, corT2);
+        if(fator_rotac_direita_B == 240)
+            CopiaSequenciaVetores(corT10, corT11, corT12, corT8, corT7, corT5, corT13, corT15, corT16, corT1, corT4, corT2);
+        fator_rotac_direita_B = 0;
+        glClear  (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        RotacaoTotal();
+        Pyraminx();
+    }
+    
+}
+
+void AtualizaPyraminx(){
+    AtualizaPyraminx_s();
+    AtualizaPyraminx_w();
+    AtualizaPyraminx_a();
+    AtualizaPyraminx_d();
+    AtualizaPyraminx_g();
+    AtualizaPyraminx_t();
+    AtualizaPyraminx_f();
+    AtualizaPyraminx_h();
 }
 
 void Inicializa(){
@@ -1409,10 +1168,6 @@ void Inicializa(){
     glClearColor
     (1.0, 1.0, 1.0, 1.0);
     
-}
-
-void Desenha(){
-    
     // Local da camera
     gluLookAt(0.0, 0.0, 0.0, 0.0, 0.0, -100.0, 0.0, 1.0, 0.0);
     
@@ -1423,47 +1178,205 @@ void Desenha(){
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     
-    InicializaCoresTriangulos(); // Inicializa as cores dos triangulos
+    // Inicializa o valor das cores de cada triangulo equilatero
+    InicializaCoresTriangulos();
     
+    // Desenha e Atualiza o Pyraminx inicial com base no valor da rotacao inicial (CONFIG_INICIAL)
+    Pyraminx();
+    AtualizaPyraminx();
     
+}
+
+void Desenha(){
     
-    // Fazer os glPush e glPop aqui.
+    //   Função principal do programa inteiro
+    //
+    // Trata cada caso de rotação separadamente de acordo com o comando do usuario.
+    //
     
+    if (caso == 's' || caso == 'S')
+    {
+        glClear  (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glLoadIdentity();
+        glPushMatrix();
+        // Rotaçao total por Barra de Espaço
+        RotacaoTotal();
+        glPushMatrix();
+        // Comandos: (S, s)
+        RotacaoFrente_A();
+        PyraFrente();
+        glPopMatrix();
+        glPushMatrix();
+        RestoCentro();
+        PyraCima();
+        PyraEsq();
+        PyraDir();
+        glPopMatrix();
+        glPopMatrix();
+        
+        AtualizaPyraminx_s();
+    }
     
+    if (caso == 'w' || caso == 'W')
+    {
+        glClear  (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glLoadIdentity();
+        glPushMatrix();
+        // Rotaçao total por Barra de Espaço
+        RotacaoTotal();
+        glPushMatrix();
+        // Comandos: (W, w)
+        RotacaoCima_A();
+        PyraCima();
+        glPopMatrix();
+        glPushMatrix();
+        RestoCentro();
+        PyraFrente();
+        PyraEsq();
+        PyraDir();
+        glPopMatrix();
+        glPopMatrix();
+        
+        AtualizaPyraminx_w();
+    }
     
-    glPushMatrix();
-    // Rotaçao total por Barra de Espaço
-    RotacaoTotal();
-    glPushMatrix();
-    // Comandos: (S, s)
-    RotacaoFrente_A();
-    TetraFrente();
-    glPopMatrix();
-    glPushMatrix();
-    // Comandos: (G, g)
-    RotacaoFrente_B();
-    RestoCentro();
-    glPushMatrix();
-    // Comandos: (W, w)
-    RotacaoCima_A();
-    TetraCima();
-    glPopMatrix();
-    glPushMatrix();
-    // Comandos: (A, a)
-    RotacaoEsquerda_A();
-    TetraEsq();
-    glPopMatrix();
-    glPushMatrix();
-    // Comandos: (D, d)
-    RotacaoDireita_A();
-    TetraDir();
-    glPopMatrix();
-    glPopMatrix();
-    glPopMatrix();
+    if (caso == 'a' || caso == 'A')
+    {
+        glClear  (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glLoadIdentity();
+        glPushMatrix();
+        // Rotaçao total por Barra de Espaço
+        RotacaoTotal();
+        glPushMatrix();
+        // Comandos: (A, a)
+        RotacaoEsquerda_A();
+        PyraEsq();
+        glPopMatrix();
+        glPushMatrix();
+        RestoCentro();
+        PyraFrente();
+        PyraCima();
+        PyraDir();
+        glPopMatrix();
+        glPopMatrix();
+        
+        AtualizaPyraminx_a();
+    }
     
+    if (caso == 'd' || caso == 'D')
+    {
+        glClear  (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glLoadIdentity();
+        glPushMatrix();
+        // Rotaçao total por Barra de Espaço
+        RotacaoTotal();
+        glPushMatrix();
+        // Comandos: (D, d)
+        RotacaoDireita_A();
+        PyraDir();
+        glPopMatrix();
+        glPushMatrix();
+        RestoCentro();
+        PyraFrente();
+        PyraCima();
+        PyraEsq();
+        glPopMatrix();
+        glPopMatrix();
+        
+        AtualizaPyraminx_d();
+    }
     
+    if (caso == 'g' || caso == 'G')
+    {
+        glClear  (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glLoadIdentity();
+        glPushMatrix();
+        // Rotaçao total por Barra de Espaço
+        RotacaoTotal();
+        glPushMatrix();
+        // Comandos: (D, d)
+        RotacaoFrente_B();
+        RestoCentro();
+        PyraCima();
+        PyraEsq();
+        PyraDir();
+        glPopMatrix();
+        glPushMatrix();
+        PyraFrente();
+        glPopMatrix();
+        glPopMatrix();
+        
+        AtualizaPyraminx_g();
+    }
     
+    if (caso == 't' || caso == 'T')
+    {
+        glClear  (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glLoadIdentity();
+        glPushMatrix();
+        // Rotaçao total por Barra de Espaço
+        RotacaoTotal();
+        glPushMatrix();
+        // Comandos: (T, t)
+        RotacaoCima_B();
+        RestoCentro();
+        PyraFrente();
+        PyraEsq();
+        PyraDir();
+        glPopMatrix();
+        glPushMatrix();
+        PyraCima();
+        glPopMatrix();
+        glPopMatrix();
+        
+        AtualizaPyraminx_t();
+    }
     
+    if (caso == 'f' || caso == 'F')
+    {
+        glClear  (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glLoadIdentity();
+        glPushMatrix();
+        // Rotaçao total por Barra de Espaço
+        RotacaoTotal();
+        glPushMatrix();
+        // Comandos: (F, f)
+        RotacaoEsquerda_B();
+        RestoCentro();
+        PyraCima();
+        PyraFrente();
+        PyraDir();
+        glPopMatrix();
+        glPushMatrix();
+        PyraEsq();
+        glPopMatrix();
+        glPopMatrix();
+        
+        AtualizaPyraminx_f();
+    }
+    
+    if (caso == 'h' || caso == 'H')
+    {
+        glClear  (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glLoadIdentity();
+        glPushMatrix();
+        // Rotaçao total por Barra de Espaço
+        RotacaoTotal();
+        glPushMatrix();
+        // Comandos: (H, h)
+        RotacaoDireita_B();
+        RestoCentro();
+        PyraCima();
+        PyraFrente();
+        PyraEsq();
+        glPopMatrix();
+        glPushMatrix();
+        PyraDir();
+        glPopMatrix();
+        glPopMatrix();
+        
+        AtualizaPyraminx_h();
+    }
     
     // Mostra as Coordenadas
     glLoadIdentity();
@@ -1472,68 +1385,6 @@ void Desenha(){
     // Executa os comandos OpenGL para renderização
     glFlush();
 }
-
-
-// Rotações Feitas:
-//
-// Total
-// Minipiramide da frente
-// Base da Minipiramide da frente
-// Minipiramide da esquerda
-//
-// Como fazer as outras rotaçoes? Principalmente a Base da Minipiramide da esquerda?
-//
-// O problema é que é preciso utilizar de triangulos já escritos!
-// Neste caso T4(), T8() e T12() precisariam para a Base da Minipiramide da esquerda! E não pode desenhá-los de novo.
-//
-
-
-
-/*
- 
- glPushMatrix();
- // Rotaçao total por Barra de Espaço
- RotacaoTotal();
- glPushMatrix();
- // Comandos: (S, s)
- RotacaoFrente_A();
- TetraFrente();
- glPopMatrix();
- glPushMatrix();
- // Comandos: (G, g)
- RotacaoFrente_B();
- RestoCentro();
- glPushMatrix();
- // Comandos: (W, w)
- RotacaoCima_A();
- TetraCima();
- glPopMatrix();
- glPushMatrix();
- // Comandos: (A, a)
- RotacaoEsquerda_A();
- TetraEsq();
- glPopMatrix();
- glPushMatrix();
- // Comandos: (D, d)
- RotacaoDireita_A();
- TetraDir();
- glPopMatrix();
- glPopMatrix();
- glPopMatrix();
- 
- 
- */
-
-
-/*
- if (fator_rotac_esquerda_A==0   && fator_rotac_direita_A==0   && fator_rotac_cima_A==0   &&
- fator_rotac_esquerda_A==120 && fator_rotac_direita_A==120 && fator_rotac_cima_A==120 &&
- fator_rotac_esquerda_A==240 && fator_rotac_direita_A==240 && fator_rotac_cima_A==240 &&
- fator_rotac_esquerda_B==0   && fator_rotac_direita_B==0   && fator_rotac_cima_B==0   && fator_rotac_frente_B==0   &&
- fator_rotac_esquerda_B==120 && fator_rotac_direita_B==120 && fator_rotac_cima_B==120 && fator_rotac_frente_B==120 &&
- fator_rotac_esquerda_B==240 && fator_rotac_direita_B==240 && fator_rotac_cima_B==240 && fator_rotac_frente_B==240 )
- */
-
 
 
 
