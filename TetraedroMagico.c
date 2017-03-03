@@ -224,102 +224,6 @@ int main(int argc, char** argv){
 
 void Menu();
 
-int pode_rotacionar_s(){
-    if((fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
-       (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
-       (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
-       (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
-       (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
-       (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
-       (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 ))
-        return 1;
-    return 0;
-}
-
-int pode_rotacionar_w(){
-    if((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
-       (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
-       (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
-       (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
-       (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
-       (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
-       (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 ))
-        return 1;
-    return 0;
-}
-
-int pode_rotacionar_a(){
-    if((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
-       (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
-       (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
-       (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
-       (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
-       (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
-       (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 ))
-        return 1;
-    return 0;
-}
-
-int pode_rotacionar_d(){
-    if((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
-       (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
-       (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
-       (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
-       (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
-       (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
-       (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 ))
-        return 1;
-    return 0;
-}
-
-int pode_rotacionar_g(){
-    if((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
-       (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
-       (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
-       (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
-       (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
-       (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
-       (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240))
-        return 1;
-    return 0;
-}
-
-int pode_rotacionar_t(){
-    if((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
-       (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
-       (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
-       (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
-       (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
-       (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
-       (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 ))
-        return 1;
-    return 0;
-}
-
-int pode_rotacionar_f(){
-    if((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
-       (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
-       (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
-       (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
-       (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
-       (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
-       (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 ))
-        return 1;
-    return 0;
-}
-
-int pode_rotacionar_h(){
-    if((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
-       (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
-       (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
-       (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
-       (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
-       (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
-       (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 ))
-        return 1;
-    return 0;
-}
-
 void Keyboard (unsigned char key, int x, int y){
     
     switch (key)
@@ -462,6 +366,102 @@ void Keyboard (unsigned char key, int x, int y){
         default:
             printf ("   Special key %c == %d\n", key, key);
     }
+}
+
+int pode_rotacionar_s(){
+    if((fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
+       (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
+       (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
+       (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
+       (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
+       (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
+       (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 ))
+        return 1;
+    return 0;
+}
+
+int pode_rotacionar_w(){
+    if((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
+       (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
+       (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
+       (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
+       (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
+       (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
+       (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 ))
+        return 1;
+    return 0;
+}
+
+int pode_rotacionar_a(){
+    if((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
+       (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
+       (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
+       (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
+       (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
+       (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
+       (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 ))
+        return 1;
+    return 0;
+}
+
+int pode_rotacionar_d(){
+    if((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
+       (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
+       (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
+       (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
+       (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
+       (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
+       (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 ))
+        return 1;
+    return 0;
+}
+
+int pode_rotacionar_g(){
+    if((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
+       (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
+       (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
+       (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
+       (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
+       (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
+       (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240))
+        return 1;
+    return 0;
+}
+
+int pode_rotacionar_t(){
+    if((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
+       (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
+       (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
+       (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
+       (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
+       (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
+       (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 ))
+        return 1;
+    return 0;
+}
+
+int pode_rotacionar_f(){
+    if((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
+       (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
+       (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
+       (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
+       (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
+       (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
+       (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 ))
+        return 1;
+    return 0;
+}
+
+int pode_rotacionar_h(){
+    if((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
+       (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
+       (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
+       (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
+       (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
+       (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
+       (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 ))
+        return 1;
+    return 0;
 }
 
 void T1(){
@@ -1391,4 +1391,5 @@ void Desenha(){
 
 
 
-
+// Feito por: Victor Cordeiro Costa
+// Contato: victorcorcos@gmail.com
