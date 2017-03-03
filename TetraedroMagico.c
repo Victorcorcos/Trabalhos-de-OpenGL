@@ -15,10 +15,10 @@
  *  Espaço
  *
  *    W     =>   Rotaciona as minipiramides.
- *  A S D   =>   Se a letra for maiuscula, rotaciona em outro sentido.
+ *  A S D        Se a letra for maiuscula, rotaciona em outro sentido.
  *
  *    T     =>   Rotaciona as bases das minipiramides.
- *  G H J   =>   Se a letra for maiúscula, rotaciona em outro sentido.
+ *  F G H        Se a letra for maiúscula, rotaciona em outro sentido.
  *
  *   ESC    =>   Fecha o jogo
  *
