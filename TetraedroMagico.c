@@ -12,8 +12,8 @@
 #include <GLUT/glut.h>
 #include <stdio.h>
 
-#define VELOCIDADE 15      // Natural: 5
-#define INITIAL_CONFIG 0   // Rotacoes iniciais
+#define VELOCIDADE 15        // Natural: 5
+#define INITIAL_CONFIG 0     // Rotacoes iniciais. Possiveis escolhas: 0, 120 ou 240.
 
 // Para deixar a tela cheia
 int telacheia=0;
@@ -22,10 +22,13 @@ int telacheia=0;
 float fator_rotac_total=0;
 
 // Valor da Rotacao das Minipiramides
-int fator_rotac_frente_A=INITIAL_CONFIG, fator_rotac_cima_A=INITIAL_CONFIG, fator_rotac_direita_A=-INITIAL_CONFIG, fator_rotac_esquerda_A=INITIAL_CONFIG;
+int fator_rotac_frente_A=INITIAL_CONFIG, fator_rotac_cima_A=INITIAL_CONFIG, fator_rotac_direita_A=INITIAL_CONFIG, fator_rotac_esquerda_A=INITIAL_CONFIG;
 
 // Valor da Rotacao das Bases das Minipiramides
-int fator_rotac_frente_B=-INITIAL_CONFIG, fator_rotac_cima_B=INITIAL_CONFIG, fator_rotac_direita_B=INITIAL_CONFIG, fator_rotac_esquerda_B=INITIAL_CONFIG;
+int fator_rotac_frente_B=0, fator_rotac_cima_B=0, fator_rotac_direita_B=0, fator_rotac_esquerda_B=0;
+
+// Guarda a tecla que o usuario digitou no teclado
+char caso=' ';
 
 // Controla a interação com o teclado
 void Keyboard (unsigned char key, int x, int y);
@@ -53,12 +56,34 @@ GLfloat vertH[3] = {  -0.5,  0.288, 0      };
 GLfloat vertI[3] = {  0,    -0.578, 0      };
 GLfloat vertJ[3] = {  0.5,   0.288, 0      };
 
-// Cores das faces
+// Cores das faces do Tetraedro inicial
 GLfloat corCimaEsquerda[3] = { 1.0f, 0.0f, 0.0f };   // Vermelho
 GLfloat corCimaDireita[3]  = { 0.0f, 0.0f, 1.0f };   // Azul
 GLfloat corBaixo[3]        = { 0.0f, 1.0f, 0.0f };   // Verde
 GLfloat corTras[3]         = { 1.0f, 1.0f, 0.0f };   // Amarelo
 GLfloat corInterna[3]      = { 0.0f, 0.0f, 0.0f };   // Preto
+
+// Cores de cada triangulo (Inicializados na funçao apropriada)
+GLfloat corT1[3];
+GLfloat corT2[3];
+GLfloat corT3[3];
+GLfloat corT4[3];
+GLfloat corT5[3];
+GLfloat corT6[3];
+GLfloat corT7[3];
+GLfloat corT8[3];
+GLfloat corT9[3];
+GLfloat corT10[3];
+GLfloat corT11[3];
+GLfloat corT12[3];
+GLfloat corT13[3];
+GLfloat corT14[3];
+GLfloat corT15[3];
+GLfloat corT16[3];
+GLfloat corTEsq[3];
+GLfloat corTDir[3];
+GLfloat corTCima[3];
+GLfloat corTFrente[3];
 
 // Triangulos Equilateros externos (De acordo com a figura localizada na pasta)
 void T1();
@@ -122,6 +147,12 @@ void TesteRotacaoCima();
 // Mostra coordenadas
 void MostraCoordenadas();
 
+// Copia vetor1 recebe o vetor2
+void CopiaVetor(GLfloat* vetor1, GLfloat* vetor2);
+
+// Inicializa Cores de cada triangulo
+void InicializaCoresTriangulos();
+
 // Mostra o menu
 void Menu();
 
@@ -169,68 +200,244 @@ void Keyboard (unsigned char key, int x, int y){
     switch (key)
     {
         case 's':
-            fator_rotac_frente_A = (fator_rotac_frente_A + VELOCIDADE) % 360;
-            glutPostRedisplay();
+            if ((fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
+                (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
+                (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
+                (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
+                (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
+                (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
+                (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 )
+                )
+            {
+                fator_rotac_frente_A = (fator_rotac_frente_A + VELOCIDADE) % 360;
+                caso = 's';
+                glutPostRedisplay();
+            }
             break;
         case 'S':
-            fator_rotac_frente_A = (360+(fator_rotac_frente_A - VELOCIDADE)) % 360;
-            glutPostRedisplay();
+            if ((fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
+                (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
+                (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
+                (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
+                (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
+                (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
+                (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 )
+                )
+            {
+                fator_rotac_frente_A = (360+(fator_rotac_frente_A - VELOCIDADE)) % 360;
+                caso = 'S';
+                glutPostRedisplay();
+            }
             break;
         case 'a':
-            fator_rotac_esquerda_A = (fator_rotac_esquerda_A + VELOCIDADE) % 360;
-            glutPostRedisplay();
+            if ((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
+                (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
+                (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
+                (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
+                (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
+                (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
+                (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 )
+                )
+            {
+                fator_rotac_esquerda_A = (fator_rotac_esquerda_A + VELOCIDADE) % 360;
+                caso = 'a';
+                glutPostRedisplay();
+            }
             break;
         case 'A':
-            fator_rotac_esquerda_A = (360+(fator_rotac_esquerda_A - VELOCIDADE)) % 360;
-            glutPostRedisplay();
+            if ((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
+                (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
+                (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
+                (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
+                (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
+                (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
+                (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 )
+                )
+            {
+                fator_rotac_esquerda_A = (360+(fator_rotac_esquerda_A - VELOCIDADE)) % 360;
+                caso = 'A';
+                glutPostRedisplay();
+            }
             break;
         case 'd':
-            fator_rotac_direita_A = (fator_rotac_direita_A + VELOCIDADE) % 360;
-            glutPostRedisplay();
+            if ((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
+                (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
+                (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
+                (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
+                (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
+                (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
+                (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 )
+                )
+            {
+                fator_rotac_direita_A = (fator_rotac_direita_A + VELOCIDADE) % 360;
+                caso = 'd';
+                glutPostRedisplay();
+            }
             break;
         case 'D':
-            fator_rotac_direita_A = (360+(fator_rotac_direita_A - VELOCIDADE)) % 360;
-            glutPostRedisplay();
+            if ((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
+                (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
+                (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
+                (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
+                (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
+                (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
+                (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 )
+                )
+            {
+                fator_rotac_direita_A = (360+(fator_rotac_direita_A - VELOCIDADE)) % 360;
+                caso = 'D';
+                glutPostRedisplay();
+            }
             break;
         case 'w':
-            fator_rotac_cima_A = (fator_rotac_cima_A + VELOCIDADE) % 360;
-            glutPostRedisplay();
+            if ((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
+                (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
+                (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
+                (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
+                (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
+                (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
+                (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 )
+                )
+            {
+                fator_rotac_cima_A = (fator_rotac_cima_A + VELOCIDADE) % 360;
+                caso = 'w';
+                glutPostRedisplay();
+            }
             break;
         case 'W':
-            fator_rotac_cima_A = (360+(fator_rotac_cima_A - VELOCIDADE)) % 360;
-            glutPostRedisplay();
+            if ((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
+                (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
+                (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
+                (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
+                (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
+                (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
+                (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 )
+                )
+            {
+                fator_rotac_cima_A = (360+(fator_rotac_cima_A - VELOCIDADE)) % 360;
+                caso = 'W';
+                glutPostRedisplay();
+            }
             break;
         case 'g':
-            fator_rotac_frente_B = (fator_rotac_frente_B + VELOCIDADE) % 360;
-            glutPostRedisplay();
+            if ((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
+                (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
+                (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
+                (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
+                (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
+                (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
+                (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240)
+                )
+            {
+                fator_rotac_frente_B = (fator_rotac_frente_B + VELOCIDADE) % 360;
+                caso = 'g';
+                glutPostRedisplay();
+            }
             break;
         case 'G':
-            fator_rotac_frente_B = (360+(fator_rotac_frente_B - VELOCIDADE)) % 360;
-            glutPostRedisplay();
+            if ((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
+                (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
+                (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
+                (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
+                (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
+                (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
+                (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240)
+                )
+            {
+                fator_rotac_frente_B = (360+(fator_rotac_frente_B - VELOCIDADE)) % 360;
+                caso = 'G';
+                glutPostRedisplay();
+            }
             break;
         case 'f':
-            fator_rotac_esquerda_B = (fator_rotac_esquerda_B + VELOCIDADE) % 360;
-            glutPostRedisplay();
+            if ((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
+                (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
+                (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
+                (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
+                (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
+                (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
+                (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 )
+                )
+            {
+                fator_rotac_esquerda_B = (fator_rotac_esquerda_B + VELOCIDADE) % 360;
+                caso = 'f';
+                glutPostRedisplay();
+            }
             break;
         case 'F':
-            fator_rotac_esquerda_B = (360+(fator_rotac_esquerda_B - VELOCIDADE)) % 360;
-            glutPostRedisplay();
+            if ((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
+                (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
+                (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
+                (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
+                (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
+                (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
+                (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 )
+                )
+            {
+                fator_rotac_esquerda_B = (360+(fator_rotac_esquerda_B - VELOCIDADE)) % 360;
+                caso = 'F';
+                glutPostRedisplay();
+            }
             break;
         case 'h':
-            fator_rotac_direita_B = (fator_rotac_direita_B + VELOCIDADE) % 360;
-            glutPostRedisplay();
+            if ((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
+                (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
+                (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
+                (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
+                (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
+                (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
+                (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 )
+                )
+            {
+                fator_rotac_direita_B = (fator_rotac_direita_B + VELOCIDADE) % 360;
+                caso = 'h';
+                glutPostRedisplay();
+            }
             break;
         case 'H':
-            fator_rotac_direita_B = (360+(fator_rotac_direita_B - VELOCIDADE)) % 360;
-            glutPostRedisplay();
+            if ((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
+                (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
+                (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
+                (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
+                (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
+                (fator_rotac_cima_B==0     || fator_rotac_cima_B==120     || fator_rotac_cima_B==240) &&
+                (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 )
+                )
+            {
+                fator_rotac_direita_B = (360+(fator_rotac_direita_B - VELOCIDADE)) % 360;
+                caso = 'H';
+                glutPostRedisplay();
+            }
             break;
         case 't':
-            fator_rotac_cima_B = (fator_rotac_cima_B + VELOCIDADE) % 360;
-            glutPostRedisplay();
+            if ((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
+                (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
+                (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
+                (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
+                (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
+                (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
+                (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 )
+                )
+            {
+                fator_rotac_cima_B = (fator_rotac_cima_B + VELOCIDADE) % 360;
+                caso = 't';
+                glutPostRedisplay();
+            }
             break;
         case 'T':
-            fator_rotac_cima_B = (360+(fator_rotac_cima_B - VELOCIDADE)) % 360;
-            glutPostRedisplay();
+            if ((fator_rotac_frente_A==0   || fator_rotac_frente_A==120   || fator_rotac_frente_A==240) &&
+                (fator_rotac_esquerda_A==0 || fator_rotac_esquerda_A==120 || fator_rotac_esquerda_A==240) &&
+                (fator_rotac_direita_A==0  || fator_rotac_direita_A==120  || fator_rotac_direita_A==240) &&
+                (fator_rotac_cima_A==0     || fator_rotac_cima_A==120     || fator_rotac_cima_A==240) &&
+                (fator_rotac_esquerda_B==0 || fator_rotac_esquerda_B==120 || fator_rotac_esquerda_B==240) &&
+                (fator_rotac_direita_B==0  || fator_rotac_direita_B==120  || fator_rotac_direita_B==240) &&
+                (fator_rotac_frente_B==0   || fator_rotac_frente_B==120   || fator_rotac_frente_B==240 )
+                )
+            {
+                fator_rotac_cima_B = (360+(fator_rotac_cima_B - VELOCIDADE)) % 360;
+                caso = 'T';
+                glutPostRedisplay();
+            }
             break;
         case 32: // Barra de espaco
             fator_rotac_total += VELOCIDADE+5;
@@ -262,7 +469,7 @@ void T1(){
     
     glBegin(GL_TRIANGLES);
     
-    glColor3fv(corCimaEsquerda);
+    glColor3fv(corT1);
     glVertex3fv(vertB);
     glVertex3fv(vertE);
     glVertex3fv(vertH);
@@ -275,7 +482,7 @@ void T2(){
     
     glBegin(GL_TRIANGLES);
     
-    glColor3fv(corCimaEsquerda);
+    glColor3fv(corT2);
     glVertex3fv(vertH);
     glVertex3fv(vertF);
     glVertex3fv(vertC);
@@ -288,7 +495,7 @@ void T3(){
     
     glBegin(GL_TRIANGLES);
     
-    glColor3fv(corCimaEsquerda);
+    glColor3fv(corT3);
     glVertex3fv(vertE);
     glVertex3fv(vertF);
     glVertex3fv(vertH);
@@ -301,7 +508,7 @@ void T4(){
     
     glBegin(GL_TRIANGLES);
     
-    glColor3fv(corCimaEsquerda);
+    glColor3fv(corT4);
     glVertex3fv(vertE);
     glVertex3fv(vertF);
     glVertex3fv(vertA);
@@ -314,7 +521,7 @@ void T5(){
     
     glBegin(GL_TRIANGLES);
     
-    glColor3fv(corBaixo);
+    glColor3fv(corT5);
     glVertex3fv(vertC);
     glVertex3fv(vertF);
     glVertex3fv(vertI);
@@ -327,7 +534,7 @@ void T6(){
     
     glBegin(GL_TRIANGLES);
     
-    glColor3fv(corBaixo);
+    glColor3fv(corT6);
     glVertex3fv(vertI);
     glVertex3fv(vertG);
     glVertex3fv(vertD);
@@ -340,7 +547,7 @@ void T7(){
     
     glBegin(GL_TRIANGLES);
     
-    glColor3fv(corBaixo);
+    glColor3fv(corT7);
     glVertex3fv(vertF);
     glVertex3fv(vertG);
     glVertex3fv(vertI);
@@ -353,7 +560,7 @@ void T8(){
     
     glBegin(GL_TRIANGLES);
     
-    glColor3fv(corBaixo);
+    glColor3fv(corT8);
     glVertex3fv(vertF);
     glVertex3fv(vertG);
     glVertex3fv(vertA);
@@ -366,7 +573,7 @@ void T9(){
     
     glBegin(GL_TRIANGLES);
     
-    glColor3fv(corCimaDireita);
+    glColor3fv(corT9);
     glVertex3fv(vertD);
     glVertex3fv(vertG);
     glVertex3fv(vertJ);
@@ -379,7 +586,7 @@ void T10(){
     
     glBegin(GL_TRIANGLES);
     
-    glColor3fv(corCimaDireita);
+    glColor3fv(corT10);
     glVertex3fv(vertJ);
     glVertex3fv(vertE);
     glVertex3fv(vertB);
@@ -392,7 +599,7 @@ void T11(){
     
     glBegin(GL_TRIANGLES);
     
-    glColor3fv(corCimaDireita);
+    glColor3fv(corT11);
     glVertex3fv(vertG);
     glVertex3fv(vertE);
     glVertex3fv(vertJ);
@@ -405,7 +612,7 @@ void T12(){
     
     glBegin(GL_TRIANGLES);
     
-    glColor3fv(corCimaDireita);
+    glColor3fv(corT12);
     glVertex3fv(vertG);
     glVertex3fv(vertE);
     glVertex3fv(vertA);
@@ -418,7 +625,7 @@ void T13(){
     
     glBegin(GL_TRIANGLES);
     
-    glColor3fv(corTras);
+    glColor3fv(corT13);
     glVertex3fv(vertC);
     glVertex3fv(vertH);
     glVertex3fv(vertI);
@@ -431,7 +638,7 @@ void T14(){
     
     glBegin(GL_TRIANGLES);
     
-    glColor3fv(corTras);
+    glColor3fv(corT14);
     glVertex3fv(vertI);
     glVertex3fv(vertJ);
     glVertex3fv(vertD);
@@ -444,7 +651,7 @@ void T15(){
     
     glBegin(GL_TRIANGLES);
     
-    glColor3fv(corTras);
+    glColor3fv(corT15);
     glVertex3fv(vertH);
     glVertex3fv(vertI);
     glVertex3fv(vertJ);
@@ -457,7 +664,7 @@ void T16(){
     
     glBegin(GL_TRIANGLES);
     
-    glColor3fv(corTras);
+    glColor3fv(corT16);
     glVertex3fv(vertB);
     glVertex3fv(vertH);
     glVertex3fv(vertJ);
@@ -470,7 +677,7 @@ void TEsq(){
     
     glBegin(GL_TRIANGLES);
     
-    glColor3fv(corInterna);
+    glColor3fv(corTEsq);
     glVertex3fv(vertH);
     glVertex3fv(vertF);
     glVertex3fv(vertI);
@@ -483,7 +690,7 @@ void TDir(){
     
     glBegin(GL_TRIANGLES);
     
-    glColor3fv(corInterna);
+    glColor3fv(corTDir);
     glVertex3fv(vertI);
     glVertex3fv(vertG);
     glVertex3fv(vertJ);
@@ -496,7 +703,7 @@ void TCima(){
     
     glBegin(GL_TRIANGLES);
     
-    glColor3fv(corInterna);
+    glColor3fv(corTCima);
     glVertex3fv(vertJ);
     glVertex3fv(vertE);
     glVertex3fv(vertH);
@@ -509,7 +716,7 @@ void TFrente(){
     
     glBegin(GL_TRIANGLES);
     
-    glColor3fv(corInterna);
+    glColor3fv(corTFrente);
     glVertex3fv(vertE);
     glVertex3fv(vertF);
     glVertex3fv(vertG);
@@ -923,6 +1130,7 @@ void RotacaoFrente_A(){
     //            Rotação
     glRotatef(-fator_rotac_frente_A, 0, 0, 1);
     
+    
 }
 
 void RotacaoFrente_B(){
@@ -945,7 +1153,7 @@ void RotacaoEsquerda_A(){
     
     // Finalmente rotacionando pelo Z
     glRotatef(fator_rotac_esquerda_A, 0, 0, 1);
-
+    
     // Translacao para rotacionar pelo Z
     glTranslatef(-0.355, -0.11, 0);
     
@@ -954,7 +1162,7 @@ void RotacaoEsquerda_A(){
     
     // Rotacao inicial para posteriormente rotacionar pelo Z
     glRotatef(-49.3, 1, -1, 1);
-
+    
 }
 
 void RotacaoEsquerda_B(){
@@ -983,32 +1191,32 @@ void RotacaoEsquerda_B(){
 }
 
 void RotacaoDireita_A(){
-
+    
     // Re-Rotacao inicial
-       glRotatef(-49.3, -1, -1, 1);
+    glRotatef(-49.3, -1, -1, 1);
     
     // Re-Rotacao
-       glRotatef(74.0, 0, 1, 0);
+    glRotatef(74.0, 0, 1, 0);
     
     // Re-Translacao
-       glTranslatef(-0.355, 0.11, 0);
+    glTranslatef(-0.355, 0.11, 0);
     
     // Finalmente rotacionando pelo Z
-       glRotatef(fator_rotac_direita_A, 0, 0, 1);
+    glRotatef(fator_rotac_direita_A, 0, 0, 1);
     
     // Translacao para rotacionar pelo Z
-       glTranslatef(0.355, -0.11, 0);
+    glTranslatef(0.355, -0.11, 0);
     
     // Rotacao para rotacionar pelo Z
-       glRotatef(-74.0, 0, 1, 0);
+    glRotatef(-74.0, 0, 1, 0);
     
     // Rotacao inicial para posteriormente rotacionar pelo Z
-       glRotatef(49.3, -1, -1, 1);
+    glRotatef(49.3, -1, -1, 1);
     
 }
 
 void RotacaoDireita_B(){
-
+    
     // Re-Rotacao inicial
     glRotatef(-49.3, -1, -1, 1);
     
@@ -1035,7 +1243,7 @@ void RotacaoDireita_B(){
 void RotacaoCima_A(){
     
     //  Re-Rotacao
-   glRotatef(-19.6, 1, 0, 0);
+    glRotatef(-19.6, 1, 0, 0);
     
     //  Re-Translacao
     glTranslatef(0, 0, 0.4);
@@ -1053,7 +1261,7 @@ void RotacaoCima_A(){
 
 
 void RotacaoCima_B(){
-
+    
     //  Re-Rotacao
     glRotatef(-19.6, 1, 0, 0);
     
@@ -1153,6 +1361,38 @@ void TesteRotacaoDireita(){
     
 }
 
+void CopiaVetor(GLfloat* vetor1, GLfloat* vetor2){
+    
+    int i=0;
+    
+    for(i=0; i<3; i++)
+        vetor1[i] = vetor2[i];
+    
+}
+
+void InicializaCoresTriangulos(){
+    CopiaVetor(corT1, corCimaEsquerda);
+    CopiaVetor(corT2, corCimaEsquerda);
+    CopiaVetor(corT3, corCimaEsquerda);
+    CopiaVetor(corT4, corCimaEsquerda);
+    CopiaVetor(corT5, corBaixo);
+    CopiaVetor(corT6, corBaixo);
+    CopiaVetor(corT7, corBaixo);
+    CopiaVetor(corT8, corBaixo);
+    CopiaVetor(corT9, corCimaDireita);
+    CopiaVetor(corT10, corCimaDireita);
+    CopiaVetor(corT11, corCimaDireita);
+    CopiaVetor(corT12, corCimaDireita);
+    CopiaVetor(corT13, corTras);
+    CopiaVetor(corT14, corTras);
+    CopiaVetor(corT15, corTras);
+    CopiaVetor(corT16, corTras);
+    CopiaVetor(corTFrente, corInterna);
+    CopiaVetor(corTCima, corInterna);
+    CopiaVetor(corTEsq, corInterna);
+    CopiaVetor(corTDir, corInterna);
+}
+
 void Inicializa(){
     
     // Define a janela de visualização
@@ -1183,38 +1423,42 @@ void Desenha(){
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     
+    InicializaCoresTriangulos(); // Inicializa as cores dos triangulos
+    
+    
+    
     // Fazer os glPush e glPop aqui.
     
     
     
     glPushMatrix();
-     // Rotaçao total por Barra de Espaço
-     RotacaoTotal();
-     glPushMatrix();
-      // Comandos: (S, s)
-      RotacaoFrente_A();
-      TetraFrente();
-     glPopMatrix();
-     glPushMatrix();
-      // Comandos: (G, g)
-      RotacaoFrente_B();
-      RestoCentro();
-      glPushMatrix();
-       // Comandos: (W, w)
-       RotacaoCima_A();
-       TetraCima();
-      glPopMatrix();
-      glPushMatrix();
-       // Comandos: (A, a)
-       RotacaoEsquerda_A();
-       TetraEsq();
-      glPopMatrix();
-      glPushMatrix();
-       // Comandos: (D, d)
-       RotacaoDireita_A();
-       TetraDir();
-      glPopMatrix();
-     glPopMatrix();
+    // Rotaçao total por Barra de Espaço
+    RotacaoTotal();
+    glPushMatrix();
+    // Comandos: (S, s)
+    RotacaoFrente_A();
+    TetraFrente();
+    glPopMatrix();
+    glPushMatrix();
+    // Comandos: (G, g)
+    RotacaoFrente_B();
+    RestoCentro();
+    glPushMatrix();
+    // Comandos: (W, w)
+    RotacaoCima_A();
+    TetraCima();
+    glPopMatrix();
+    glPushMatrix();
+    // Comandos: (A, a)
+    RotacaoEsquerda_A();
+    TetraEsq();
+    glPopMatrix();
+    glPushMatrix();
+    // Comandos: (D, d)
+    RotacaoDireita_A();
+    TetraDir();
+    glPopMatrix();
+    glPopMatrix();
     glPopMatrix();
     
     
@@ -1229,46 +1473,66 @@ void Desenha(){
     glFlush();
 }
 
- 
-    // Rotações Feitas:
-    //
-    // Total
-    // Minipiramide da frente
-    // Base da Minipiramide da frente
-    // Minipiramide da esquerda
-    //
-    // Como fazer as outras rotaçoes? Principalmente a Base da Minipiramide da esquerda?
-    //
-    // O problema é que é preciso utilizar de triangulos já escritos!
-    // Neste caso T4(), T8() e T12() precisariam para a Base da Minipiramide da esquerda! E não pode desenhá-los de novo.
-    //
+
+// Rotações Feitas:
+//
+// Total
+// Minipiramide da frente
+// Base da Minipiramide da frente
+// Minipiramide da esquerda
+//
+// Como fazer as outras rotaçoes? Principalmente a Base da Minipiramide da esquerda?
+//
+// O problema é que é preciso utilizar de triangulos já escritos!
+// Neste caso T4(), T8() e T12() precisariam para a Base da Minipiramide da esquerda! E não pode desenhá-los de novo.
+//
 
 
 
 /*
  
- Exemplo de glPush e glPop
- 
  glPushMatrix();
-   glTranslatef (-1.0, 0.0, 0.0);
-   glRotatef ((GLfloat) shoulder, 0.0, 1.0, 0.0);
-   glTranslatef (1.0, 0.0, 0.0);
-   glPushMatrix();
-     glScalef (2.0, 0.4, 1.0);
-     glutWireCube (1.0);
-   glPopMatrix();
-   glTranslatef (1.0, 0.0, 0.0);
-   glRotatef ((GLfloat) elbow, 0.0, 0.0, 1.0);
-   glTranslatef (1.0, 0.0, 0.0);
-   glPushMatrix();
-     glScalef (2.0, 0.4, 1.0);
-     glutWireCube (1.0);
-   glPopMatrix();
+ // Rotaçao total por Barra de Espaço
+ RotacaoTotal();
+ glPushMatrix();
+ // Comandos: (S, s)
+ RotacaoFrente_A();
+ TetraFrente();
+ glPopMatrix();
+ glPushMatrix();
+ // Comandos: (G, g)
+ RotacaoFrente_B();
+ RestoCentro();
+ glPushMatrix();
+ // Comandos: (W, w)
+ RotacaoCima_A();
+ TetraCima();
+ glPopMatrix();
+ glPushMatrix();
+ // Comandos: (A, a)
+ RotacaoEsquerda_A();
+ TetraEsq();
+ glPopMatrix();
+ glPushMatrix();
+ // Comandos: (D, d)
+ RotacaoDireita_A();
+ TetraDir();
+ glPopMatrix();
+ glPopMatrix();
  glPopMatrix();
  
  
  */
 
+
+/*
+ if (fator_rotac_esquerda_A==0   && fator_rotac_direita_A==0   && fator_rotac_cima_A==0   &&
+ fator_rotac_esquerda_A==120 && fator_rotac_direita_A==120 && fator_rotac_cima_A==120 &&
+ fator_rotac_esquerda_A==240 && fator_rotac_direita_A==240 && fator_rotac_cima_A==240 &&
+ fator_rotac_esquerda_B==0   && fator_rotac_direita_B==0   && fator_rotac_cima_B==0   && fator_rotac_frente_B==0   &&
+ fator_rotac_esquerda_B==120 && fator_rotac_direita_B==120 && fator_rotac_cima_B==120 && fator_rotac_frente_B==120 &&
+ fator_rotac_esquerda_B==240 && fator_rotac_direita_B==240 && fator_rotac_cima_B==240 && fator_rotac_frente_B==240 )
+ */
 
 
 
