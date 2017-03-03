@@ -22,10 +22,10 @@ int telacheia=0;
 float fator_rotac_total=0;
 
 // Valor da Rotacao das Minipiramides
-float fator_rotac_frente_A=INITIAL_CONFIG, fator_rotac_cima_A=INITIAL_CONFIG, fator_rotac_direita_A=-INITIAL_CONFIG, fator_rotac_esquerda_A=INITIAL_CONFIG;
+int fator_rotac_frente_A=INITIAL_CONFIG, fator_rotac_cima_A=INITIAL_CONFIG, fator_rotac_direita_A=-INITIAL_CONFIG, fator_rotac_esquerda_A=INITIAL_CONFIG;
 
 // Valor da Rotacao das Bases das Minipiramides
-float fator_rotac_frente_B=-INITIAL_CONFIG, fator_rotac_cima_B=INITIAL_CONFIG, fator_rotac_direita_B=INITIAL_CONFIG, fator_rotac_esquerda_B=INITIAL_CONFIG;
+int fator_rotac_frente_B=-INITIAL_CONFIG, fator_rotac_cima_B=INITIAL_CONFIG, fator_rotac_direita_B=INITIAL_CONFIG, fator_rotac_esquerda_B=INITIAL_CONFIG;
 
 // Controla a interação com o teclado
 void Keyboard (unsigned char key, int x, int y);
@@ -169,67 +169,67 @@ void Keyboard (unsigned char key, int x, int y){
     switch (key)
     {
         case 's':
-            fator_rotac_frente_A += VELOCIDADE;
+            fator_rotac_frente_A = (fator_rotac_frente_A + VELOCIDADE) % 360;
             glutPostRedisplay();
             break;
         case 'S':
-            fator_rotac_frente_A -= VELOCIDADE;
+            fator_rotac_frente_A = (360+(fator_rotac_frente_A - VELOCIDADE)) % 360;
             glutPostRedisplay();
             break;
         case 'a':
-            fator_rotac_esquerda_A += VELOCIDADE;
+            fator_rotac_esquerda_A = (fator_rotac_esquerda_A + VELOCIDADE) % 360;
             glutPostRedisplay();
             break;
         case 'A':
-            fator_rotac_esquerda_A -= VELOCIDADE;
+            fator_rotac_esquerda_A = (360+(fator_rotac_esquerda_A - VELOCIDADE)) % 360;
             glutPostRedisplay();
             break;
         case 'd':
-            fator_rotac_direita_A += VELOCIDADE;
+            fator_rotac_direita_A = (fator_rotac_direita_A + VELOCIDADE) % 360;
             glutPostRedisplay();
             break;
         case 'D':
-            fator_rotac_direita_A -= VELOCIDADE;
+            fator_rotac_direita_A = (360+(fator_rotac_direita_A - VELOCIDADE)) % 360;
             glutPostRedisplay();
             break;
         case 'w':
-            fator_rotac_cima_A += VELOCIDADE;
+            fator_rotac_cima_A = (fator_rotac_cima_A + VELOCIDADE) % 360;
             glutPostRedisplay();
             break;
         case 'W':
-            fator_rotac_cima_A -= VELOCIDADE;
+            fator_rotac_cima_A = (360+(fator_rotac_cima_A - VELOCIDADE)) % 360;
             glutPostRedisplay();
             break;
         case 'g':
-            fator_rotac_frente_B += VELOCIDADE;
+            fator_rotac_frente_B = (fator_rotac_frente_B + VELOCIDADE) % 360;
             glutPostRedisplay();
             break;
         case 'G':
-            fator_rotac_frente_B -= VELOCIDADE;
+            fator_rotac_frente_B = (360+(fator_rotac_frente_B - VELOCIDADE)) % 360;
             glutPostRedisplay();
             break;
         case 'f':
-            fator_rotac_esquerda_B += VELOCIDADE;
+            fator_rotac_esquerda_B = (fator_rotac_esquerda_B + VELOCIDADE) % 360;
             glutPostRedisplay();
             break;
         case 'F':
-            fator_rotac_esquerda_B -= VELOCIDADE;
+            fator_rotac_esquerda_B = (360+(fator_rotac_esquerda_B - VELOCIDADE)) % 360;
             glutPostRedisplay();
             break;
         case 'h':
-            fator_rotac_direita_B += VELOCIDADE;
+            fator_rotac_direita_B = (fator_rotac_direita_B + VELOCIDADE) % 360;
             glutPostRedisplay();
             break;
         case 'H':
-            fator_rotac_direita_B -= VELOCIDADE;
+            fator_rotac_direita_B = (360+(fator_rotac_direita_B - VELOCIDADE)) % 360;
             glutPostRedisplay();
             break;
         case 't':
-            fator_rotac_cima_B += VELOCIDADE;
+            fator_rotac_cima_B = (fator_rotac_cima_B + VELOCIDADE) % 360;
             glutPostRedisplay();
             break;
         case 'T':
-            fator_rotac_cima_B -= VELOCIDADE;
+            fator_rotac_cima_B = (360+(fator_rotac_cima_B - VELOCIDADE)) % 360;
             glutPostRedisplay();
             break;
         case 32: // Barra de espaco
@@ -255,7 +255,7 @@ void Keyboard (unsigned char key, int x, int y){
         default:
             printf ("   Special key %c == %d\n", key, key);
     }
-    printf("Frente: %f \n Cima: %f \n Direita: %f \n Esquerda:  %f \n", fator_rotac_frente_A, fator_rotac_cima_A, fator_rotac_direita_A, fator_rotac_esquerda_A);
+    printf("Frente: %d \n Cima: %d \n Direita: %d \n Esquerda:  %d \n", fator_rotac_frente_A, fator_rotac_cima_A, fator_rotac_direita_A, fator_rotac_esquerda_A);
 }
 
 void T1(){
