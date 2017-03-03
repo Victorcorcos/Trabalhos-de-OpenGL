@@ -99,7 +99,7 @@ GLfloat corTDir[3];
 GLfloat corTCima[3];
 GLfloat corTFrente[3];
 
-// Funções de desenhar cada triangulos equilateros externo
+// Funções de desenho de cada triangulo equilatero externo
 void T1();
 void T2();
 void T3();
@@ -117,32 +117,32 @@ void T14();
 void T15();
 void T16();
 
-// Funções de desenhar os triangulos equilateros internos
+// Funções de desenho de cada triangulo equilatero interno
 void TEsq();
 void TDir();
 void TCima();
 void TFrente();
 
-// Funções de desenhar os Tetraedros, formados por triangulos equilateros.
+// Funções de desenho dos Tetraedros, formados pelos triangulos equilateros.
 void Pyraminx();
 void PyraFrente();
 void PyraEsq();
 void PyraDir();
 void PyraCima();
-void RestoCentro();  // A figura formada no centro é um Octaedro.
+void RestoCentro();  // A figura formada no centro é um Octaedro
 
-// Rotacoes
-void RotacaoTotal();       // OK. Rotaciona toda a piramide
-void RotacaoFrente_A();    // OK. Para a Piramide da frente
-void RotacaoFrente_B();    // OK. Para a Base da Piramide da frente
-void RotacaoEsquerda_A();  // OK. Para a Piramide da lateral esquerda
-void RotacaoEsquerda_B();  // OK. Para a Base da Piramide da lateral esquerda
-void RotacaoDireita_A();   // OK. Para a Piramide da lateral direita
-void RotacaoDireita_B();   // OK. Para a Base da Piramide da lateral direita
-void RotacaoCima_A();      // OK. Para a Piramide de cima
-void RotacaoCima_B();      // OK. Para a Base da Piramide de cima
+// Rotações
+void RotacaoTotal();       // Rotaciona toda a piramide
+void RotacaoFrente_A();    // Para a Piramide da frente
+void RotacaoFrente_B();    // Para a Base da Piramide da frente
+void RotacaoEsquerda_A();  // Para a Piramide da lateral esquerda
+void RotacaoEsquerda_B();  // Para a Base da Piramide da lateral esquerda
+void RotacaoDireita_A();   // Para a Piramide da lateral direita
+void RotacaoDireita_B();   // Para a Base da Piramide da lateral direita
+void RotacaoCima_A();      // Para a Piramide de cima
+void RotacaoCima_B();      // Para a Base da Piramide de cima
 
-// Funções que atualiza o Pyraminx após realizar cada rotação.
+// Funções para atualizar o Pyraminx após realizar cada rotação
 void AtualizaPyraminx_s();
 void AtualizaPyraminx_w();
 void AtualizaPyraminx_a();
@@ -152,7 +152,7 @@ void AtualizaPyraminx_t();
 void AtualizaPyraminx_f();
 void AtualizaPyraminx_h();
 
-// Função que atualiza o Pyraminx de forma geral.
+// Função que atualiza o Pyraminx para todas as rotações
 void AtualizaPyraminx();
 
 // Funções que determinam se partes do Pyraminx pode ser rotacionado.
@@ -172,9 +172,6 @@ void MostraCoordenadas();
 
 // Inicializa cores de cada triangulo que forma o Pyraminx
 void InicializaCoresTriangulos();
-
-// Mostra o menu
-void Menu();
 
 // vetor1 = vetor2
 void CopiaVetor(GLfloat* vetor1, GLfloat* vetor2);
@@ -221,8 +218,6 @@ int main(int argc, char** argv){
     
     return 0;
 }
-
-void Menu();
 
 void Keyboard (unsigned char key, int x, int y){
     
