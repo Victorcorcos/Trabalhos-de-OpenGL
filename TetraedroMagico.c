@@ -1197,7 +1197,7 @@ void Desenha(){
         // Rotaçao total por Barra de Espaço
         RotacaoTotal();
         glPushMatrix();
-        // Comandos: (S, s)
+        // Rotação tetraedro da frente. Comandos: (S, s)
         RotacaoFrente_A();
         PyraFrente();
         glPopMatrix();
@@ -1220,7 +1220,7 @@ void Desenha(){
         // Rotaçao total por Barra de Espaço
         RotacaoTotal();
         glPushMatrix();
-        // Comandos: (W, w)
+        // Rotação tetraedro de cima. Comandos: (W, w)
         RotacaoCima_A();
         PyraCima();
         glPopMatrix();
@@ -1243,7 +1243,7 @@ void Desenha(){
         // Rotaçao total por Barra de Espaço
         RotacaoTotal();
         glPushMatrix();
-        // Comandos: (A, a)
+        // Rotação tetraedro da esquerda. Comandos: (A, a)
         RotacaoEsquerda_A();
         PyraEsq();
         glPopMatrix();
@@ -1266,7 +1266,7 @@ void Desenha(){
         // Rotaçao total por Barra de Espaço
         RotacaoTotal();
         glPushMatrix();
-        // Comandos: (D, d)
+        // Rotação tetraedro da direita. Comandos: (D, d)
         RotacaoDireita_A();
         PyraDir();
         glPopMatrix();
@@ -1289,7 +1289,7 @@ void Desenha(){
         // Rotaçao total por Barra de Espaço
         RotacaoTotal();
         glPushMatrix();
-        // Comandos: (D, d)
+        // Rotação da base do tetraedro da frente. Comandos: (D, d)
         RotacaoFrente_B();
         RestoCentro();
         PyraCima();
@@ -1312,7 +1312,7 @@ void Desenha(){
         // Rotaçao total por Barra de Espaço
         RotacaoTotal();
         glPushMatrix();
-        // Comandos: (T, t)
+        // Rotação da base do tetraedro de cima. Comandos: (T, t)
         RotacaoCima_B();
         RestoCentro();
         PyraFrente();
@@ -1335,7 +1335,7 @@ void Desenha(){
         // Rotaçao total por Barra de Espaço
         RotacaoTotal();
         glPushMatrix();
-        // Comandos: (F, f)
+        // Rotação da base do tetraedro da esquerda. Comandos: (F, f)
         RotacaoEsquerda_B();
         RestoCentro();
         PyraCima();
@@ -1358,7 +1358,7 @@ void Desenha(){
         // Rotaçao total por Barra de Espaço
         RotacaoTotal();
         glPushMatrix();
-        // Comandos: (H, h)
+        // Rotação da base do tetraedro da direita. Comandos: (H, h)
         RotacaoDireita_B();
         RestoCentro();
         PyraCima();
