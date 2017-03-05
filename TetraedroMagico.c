@@ -1176,13 +1176,15 @@ void Inicializa(){
     // Inicializa o valor das cores de cada triangulo equilatero
     InicializaCoresTriangulos();
     
-    // Desenha e Atualiza o Pyraminx inicial com base no valor da rotacao inicial (CONFIG_INICIAL)
-    Pyraminx();
-    AtualizaPyraminx();
-    
 }
 
 void Desenha(){
+    
+    // Desenha e Atualiza o Pyraminx inicial com base no valor da rotacao inicial (CONFIG_INICIAL)
+    glClear  (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    RotacaoTotal();
+    Pyraminx();
+    AtualizaPyraminx();
     
     //   Função principal do programa inteiro
     //
