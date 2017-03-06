@@ -4,6 +4,7 @@
  * Victor Cordeiro Costa
  * contato: victorcorcos@gmail.com
  * https://www.linkedin.com/in/victor-costa-0bba7197/
+ * https://github.com/Victorcorcos
  *
  */
 
@@ -1180,7 +1181,7 @@ void Inicializa(){
 
 void Desenha(){
     
-    // Desenha e Atualiza o Pyraminx inicial com base no valor da rotacao inicial (CONFIG_INICIAL)
+    // Limpa a tela. Desenha, Atualiza e Rotaciona o Pyraminx.
     glClear  (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     RotacaoTotal();
     Pyraminx();
@@ -1210,8 +1211,6 @@ void Desenha(){
         PyraDir();
         glPopMatrix();
         glPopMatrix();
-        
-        AtualizaPyraminx_s();
     }
     
     if (caso == 'w' || caso == 'W')
@@ -1233,8 +1232,6 @@ void Desenha(){
         PyraDir();
         glPopMatrix();
         glPopMatrix();
-        
-        AtualizaPyraminx_w();
     }
     
     if (caso == 'a' || caso == 'A')
@@ -1256,8 +1253,6 @@ void Desenha(){
         PyraDir();
         glPopMatrix();
         glPopMatrix();
-        
-        AtualizaPyraminx_a();
     }
     
     if (caso == 'd' || caso == 'D')
@@ -1279,8 +1274,6 @@ void Desenha(){
         PyraEsq();
         glPopMatrix();
         glPopMatrix();
-        
-        AtualizaPyraminx_d();
     }
     
     if (caso == 'g' || caso == 'G')
@@ -1302,8 +1295,6 @@ void Desenha(){
         PyraFrente();
         glPopMatrix();
         glPopMatrix();
-        
-        AtualizaPyraminx_g();
     }
     
     if (caso == 't' || caso == 'T')
@@ -1325,8 +1316,6 @@ void Desenha(){
         PyraCima();
         glPopMatrix();
         glPopMatrix();
-        
-        AtualizaPyraminx_t();
     }
     
     if (caso == 'f' || caso == 'F')
@@ -1348,8 +1337,6 @@ void Desenha(){
         PyraEsq();
         glPopMatrix();
         glPopMatrix();
-        
-        AtualizaPyraminx_f();
     }
     
     if (caso == 'h' || caso == 'H')
@@ -1371,8 +1358,6 @@ void Desenha(){
         PyraDir();
         glPopMatrix();
         glPopMatrix();
-        
-        AtualizaPyraminx_h();
     }
     
     // Mostra as Coordenadas
